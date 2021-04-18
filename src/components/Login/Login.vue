@@ -59,7 +59,7 @@
 
 <script>
 import {mapActions} from 'vuex'
-import auth from "@/utils/auth";
+import auth from '@/utils/auth.js'
 
 export default {
   name: "Login.vue",
@@ -85,7 +85,9 @@ export default {
   },
   methods: {
     handleSubmit(e) {
+
       e.preventDefault()
+
       const {
         Login, email, password
       } = this
@@ -105,7 +107,6 @@ export default {
         setTimeout(() => {
           this.$router.push('/')
         }, 2000)
-
       })
     },
     ...mapActions(['Login']),

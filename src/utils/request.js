@@ -2,7 +2,7 @@ import axios from "axios";
 import {getToken} from "./auth";
 
 export const BASE_URL = "http://localhost:8090";
-
+// export const BASE_URL = "";
 let headers = {'content-type': 'application/json'}
 let INSTANCE = axios.create({
     baseURL: BASE_URL,

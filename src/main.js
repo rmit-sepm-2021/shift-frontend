@@ -4,7 +4,8 @@ import router from './router'
 import vuetify from './plugins/vuetify';
 import store from './store'
 import './permission' // permission control
-Vue.config.productionTip = false
+import('./mock.js')
+Vue.config.productionTip = true
 
 new Vue({
     router, store,
