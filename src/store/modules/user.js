@@ -16,7 +16,6 @@ const user = {
             state.token = token
         },
         SET_NAME: (state, name) => {
-
             state.name = name
         },
         SET_ROLES: (state, roles) => {
@@ -30,10 +29,12 @@ const user = {
         Login({commit}, param) {
             return new Promise((resolve, reject) => {
                 login(param).then(response => {
+                    console.log(response)
                     const data = response.data
                     commit('SET_EMAIL', data.email)
                     commit('SET_NAME', data.name)
                     commit('SET_ROLES', data.role)
+                    commit('SET_TOKEN', data.token)
                     resolve(response)
                 }).catch(error => {
                     reject(error)
@@ -41,6 +42,16 @@ const user = {
 
             })
 
+        }
+    },
+    getters: {
+        nameAbbreviation: state => {
+            const arr = state.name.split(" ");
+            let Abbr = '';
+            for (const i of arr) {
+                Abbr += i[0]
+            }
+            return Abbr
         }
     }
 }

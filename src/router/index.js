@@ -1,8 +1,8 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Home from '../views/Home.vue'
 import CalendarDemo from '../components/CalendarDemo/CalendarDemo'
 import Login from "@/components/Login/Login";
+import BasicLayout from "@/layouts/BasicLayout"
 
 Vue.use(VueRouter)
 
@@ -10,20 +10,23 @@ const routes = [
     //Dashboard
     {
         path: '/',
-        name: 'Home',
-        component: Home,
+        component: BasicLayout,
+        children: [
+            {
+                path: 'dashboard',
+                component: CalendarDemo,
+                meta: {
+                    title: 'Dashboard'
+                }
+            },
+        ]
+    },
 
-    },
-    {
-        path: '/calendarDemo',
-        name: "calendar",
-        component: CalendarDemo
-    },
+    //login
     {
         path: '/login',
         component: Login,
-
-        meta:{
+        meta: {
             title: 'Login'
         }
     }

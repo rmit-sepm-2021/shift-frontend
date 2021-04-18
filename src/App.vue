@@ -1,8 +1,8 @@
 <template>
   <v-app>
-    <!--    <BlankLayout>-->
+
     <router-view></router-view>
-    <!--    </BlankLayout>-->
+
   </v-app>
 </template>
 

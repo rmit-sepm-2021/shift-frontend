@@ -102,6 +102,10 @@ export default {
         const data = res.data
         this.loginAlert = !this.loginAlert
         auth.setToken(data['token'])
+        setTimeout(() => {
+          this.$router.push('/')
+        }, 2000)
+
       })
     },
     ...mapActions(['Login']),
