@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import CalendarDemo from '../components/CalendarDemo/CalendarDemo'
+import Calendar from '../components/Calendar/Calendar'
 import Login from "@/components/Login/Login";
 import BasicLayout from "@/layouts/BasicLayout"
 
@@ -14,7 +14,7 @@ const routes = [
         children: [
             {
                 path: 'dashboard',
-                component: CalendarDemo,
+                component: Calendar,
                 meta: {
                     title: 'Dashboard'
                 }

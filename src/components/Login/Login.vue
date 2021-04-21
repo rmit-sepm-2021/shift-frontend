@@ -62,8 +62,9 @@ import {mapActions} from 'vuex'
 import auth from '@/utils/auth.js'
 
 export default {
-  name: "Login.vue",
+  name: "Login",
   computed: {},
+
   data() {
     return {
       loginAlert: false,
@@ -85,7 +86,6 @@ export default {
   },
   methods: {
     handleSubmit(e) {
-
       e.preventDefault()
 
       const {

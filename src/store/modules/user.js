@@ -9,6 +9,7 @@ const user = {
         token: '',
         name: '',
         email: '',
+        // role : STAFF|MANAGER
         role: '',
     },
     mutations: {
@@ -18,8 +19,8 @@ const user = {
         SET_NAME: (state, name) => {
             state.name = name
         },
-        SET_ROLES: (state, roles) => {
-            state.roles = roles
+        SET_ROLE: (state, role) => {
+            state.role = role
         },
         SET_EMAIL: (state, email) => {
             state.email = email
@@ -33,7 +34,7 @@ const user = {
                     const data = response.data
                     commit('SET_EMAIL', data.email)
                     commit('SET_NAME', data.name)
-                    commit('SET_ROLES', data.role)
+                    commit('SET_ROLE', data.role)
                     commit('SET_TOKEN', data.token)
                     resolve(response)
                 }).catch(error => {

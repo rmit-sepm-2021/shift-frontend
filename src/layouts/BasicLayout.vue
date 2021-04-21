@@ -6,65 +6,148 @@
           <v-avatar class="mb-4" color="grey darken-1" size="64">
             <span class="white--text headline">{{ nameAbbreviation }}</span>
           </v-avatar>
-          <div>{{ name }} {{ email }}</div>
+          <div>{{ role }} {{ name }} {{ email }}</div>
         </v-sheet>
-
         <v-divider></v-divider>
         <v-list>
-          <v-list-item v-for="[icon, text] in links" :key="icon" link>
+          <v-list-item v-if="isManager"  @click="switchToStaff">
+            <v-list-item-content>
+              <v-list-item-title>Switch to Manager</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+          <v-list-item v-else  @click="switchToManager">
+            <v-list-item-content>
+              <v-list-item-title>Switch to Manager</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+          <v-list-item v-for="[icon, text,path] in SideBarLink" :key="text" link :to="path">
             <!--            TODO Add icon-->
+            <v-list-item-icon>
+              <v-icon v-text="icon"></v-icon>
+            </v-list-item-icon>
             <v-list-item-content>
               <v-list-item-title>{{ text }}</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
         </v-list>
       </v-navigation-drawer>
-      <!--      <v-app-bar short>-->
-      <!--        <v-tab href="/calendarDemo"> Calendar Demo</v-tab>-->
-      <!--        <v-tab href="#two"> Profile</v-tab>-->
-      <!--        <v-tab href="#three"> fuck</v-tab>-->
-      <!--      </v-app-bar>-->
       <v-container class="py-8 px-6" fluid>
-        <!--        <slot></slot>-->
         <router-view/>
       </v-container>
-<!--      <v-footer padless>-->
-<!--        <v-col class="text-center" cols="12">-->
-<!--          {{ new Date().getFullYear() }} — <strong>RMIT-students</strong>-->
-<!--        </v-col>-->
-<!--      </v-footer>-->
     </v-main>
   </v-app>
 
 </template>
 
 <script>
-import {mapGetters, mapState} from 'vuex'
+import {mapActions, mapGetters, mapState} from 'vuex'
+import auth from "@/utils/auth";
 
 export default {
-  name: "blank-layout",
+  name: "BasicLayout",
+
+  created() {
+    const {Login} = this
+    const loginParams = {
+      // email: "mask@test.com", password: "123456"
+      email: "test@qq.com", password: "123456"
+    }
+    //TODO start here
+    if (!auth.isLogged()) {
+      alert("Connecting to the server...")
+      Login(loginParams).then((res) => {
+        console.log("in dashboard")
+        console.log(res)
+        const data = res['data']
+        auth.setToken(data['token'])
+      })
+    }
+
+  },
   computed: {
+    isManager() {
+      if (this.role === "STAFF") {
+        return false;
+      } else if (this.role === "MANAGER") {
+        return true;
+      } else {
+        alert("Can not know your role.")
+        return false;
+      }
+    },
+
     ...mapState({
       name: state => state.user.name,
       email: state => state.user.email,
+      role: state => state.user.role,
     }),
     ...mapGetters([
       'nameAbbreviation',
-
       // ...
-    ])
+    ]),
+    SideBarLink() {
+      console.log({role: this.role})
+      if (this.role === "STAFF") {
+        return [
+          ["mdi-inbox-arrow-down", "Profile", "/profile"],
+          ["mdi-send", "User", "/"],
+          ["mdi-delete", "Time", "/"],
+          ["mdi-alert-octagon", "Shift", "/"],
+        ]
+      } else {
+        return [
+          ["mdi-inbox-arrow-down", "Profile", "/profile", "doNothing"],
+          ["mdi-send", "User", "/"],
+          ["mdi-send", "Create Account", "/manager/accounts"],
+          ["mdi-delete", "Time", "/"],
+          ["mdi-alert-octagon", "Shift", "/"],
+        ]
+      }
+    },
   },
   data: () => ({
     cards: ["Today", "Yesterday"],
     drawer: null,
-
-    links: [
-      ["mdi-inbox-arrow-down", "Profile"],
-      ["mdi-send", "User"],
-      ["mdi-delete", "Time"],
-      ["mdi-alert-octagon", "Shift"],
-    ],
   }),
+  methods: {
+    loginAsStaff() {
+      const {Login} = this
+      const loginParams = {
+        email: "mask@test.com", password: "123456"
+      }
+      //TODO start here
+      alert("Connecting to the server...")
+      Login(loginParams).then((res) => {
+        console.log("in dashboard")
+        console.log(res)
+        const data = res['data']
+        auth.setToken(data['token'])
+      })
+    },
+    loginAsManager() {
+      const {Login} = this
+      const loginParams = {
+        email: "test@qq.com", password: "123456"
+      }
+      //TODO start here
+      alert("Connecting to the server...")
+      Login(loginParams).then((res) => {
+        console.log("in dashboard")
+        console.log(res)
+        const data = res['data']
+        auth.setToken(data['token'])
+      })
+    },
+    ...mapActions(['Login']),
+    doNothing() {
+    },
+    switchToStaff() {
+      this.loginAsStaff()
+    },
+    switchToManager() {
+      this.loginAsManager()
+    },
+  }
 };
 </script>
 
