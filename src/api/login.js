@@ -10,7 +10,10 @@ const userApi = {
     SendSmsErr: '/account/sms_err',
     // get my info
     UserInfo: '/user/info',
-    UserMenu: '/user/nav'
+    UserMenu: '/user/nav',
+    //get shift id
+    ShiftId:'/shift/{id}'
+
 }
 
 export async function login(loginParam) {
