@@ -1,9 +1,9 @@
 <template>
   <div>
-    <div>
-      <el-card class="box-card" style="width:220px">
+    <div style="display:flex;justify-content:space-around;margin-top:100px">
+      <el-card class="box-card" style="width:400px">
         <div slot="header" class="clearfix">
-          <span>name</span>
+          <span>name1</span>
         </div>
         <div>
           <div>email:<el-tag></el-tag></div>
@@ -16,7 +16,7 @@
         </div>
       </el-card>
       <el-dialog
-        title="提示"
+        title="info"
         :visible.sync="dialogVisible"
         width="70%">
        <div>
@@ -45,16 +45,18 @@
 
        </div>
         <span slot="footer" class="dialog-footer">
-          <el-button @click="dialogVisible = false">取 消</el-button>
-          <el-button type="primary" @click="updateUserInformationOfView">确 定</el-button>
+          <el-button @click="dialogVisible = false">cancle</el-button>
+          <el-button type="primary" @click="updateUserInformationOfView">update</el-button>
         </span>
       </el-dialog>
     </div>
-    
   </div>
 </template>
 
 <script>
+
+// import {getUserInfo} from "@/api/login.js"
+
   export default{
     name:"profile",
     data() {
@@ -69,7 +71,7 @@
     },
     methods: {
       updateUserInformationOfView(){
-        this.putRequest('/staff',this.user2).then(resp =>{
+        this.getUserInfo('/staff',this.user2).then(resp =>{
           if(resp){
             this.dialogVisible=false;
             this.initUser();
@@ -80,7 +82,7 @@
         this.dialogVisible=true;
       },
       initUser(){
-        this.getRequest('/staff').then(resp =>{
+        this.getUserInfo('/staff').then(resp =>{
           if(resp){
             this.user = resp;
             this.user=Object.assign({},this.user)

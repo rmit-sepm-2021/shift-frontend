@@ -16,3 +16,6 @@ const userApi = {
 export async function login(loginParam) {
     return request.post(userApi.Login, loginParam)
 }
+export async function getUserInfo(infoParam) {
+    return request.post('/staff', infoParam)
+}
