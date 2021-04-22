@@ -2,8 +2,6 @@
   <div>
 
     <v-sheet tile height="54" class="d-flex">
-
-
       <v-btn icon class="ma-2" @click="$refs.calendar.prev()">
         <v-icon>mdi-chevron-left</v-icon>
       </v-btn>
@@ -32,7 +30,6 @@
       </v-toolbar-title>
       <v-spacer></v-spacer>
       <FreeTimeDialog v-if="!isManager"></FreeTimeDialog>
-
 
     </v-sheet>
     <v-sheet height="600">
@@ -93,7 +90,7 @@ export default {
     ready: false,
     // end
     type: "week",
-    types: ["month", "week","day"],
+    types: ["month", "week", "day"],
     mode: "stack",
     weekday: [1, 2, 3, 4, 5, 6, 0],
     value: "",
@@ -114,29 +111,31 @@ export default {
     this.scrollToTime()
     this.updateTime()
     // end
-    const param = {
-      staffId: this.id
-    }
-    getFreeTime(param).then(res => {
-      const data = res.data
-      const tmp = []
-      for (const time of data) {
-        tmp.push({
-          startTime: moment(time.startTime),
-          endTime: moment(time.endTime)
-        })
-
+    if (!this.isManager) {
+      const param = {
+        staffId: this.id
       }
-      this.freeTime = tmp
-      console.log(res)
-    })
+      getFreeTime(param).then(res => {
+        const data = res.data
+        const tmp = []
+        for (const time of data) {
+          tmp.push({
+            startTime: moment(time.startTime),
+            endTime: moment(time.endTime)
+          })
+
+        }
+        this.freeTime = tmp
+        console.log(res)
+      })
+    }
   },
   computed: {
     // current time
-    nowY () {
+    nowY() {
       return this.cal ? this.cal.timeToY(this.cal.times.now) + 'px' : '-10px'
     },
-    cal () {
+    cal() {
       return this.ready ? this.$refs.calendar : null
     },
     // end
@@ -166,20 +165,18 @@ export default {
     },
   },
   methods: {
-    viewDay ({ date }) {
+    viewDay({date}) {
       this.value = date
       this.type = 'day'
     },
-    setToday () {
+    setToday() {
       this.value = ''
     },
     intervalStyle(interval) {
       // console.log(interval)
-
       const mInterval = moment(interval.date + " " + interval.time)
       for (const time of this.freeTime) {
-
-        if (mInterval.isBetween(time.startTime, time.endTime,null,'[]')) {
+        if (mInterval.isBetween(time.startTime, time.endTime, null, '[]')) {
           // console.log(mInterval.format())
           // console.log(time.startTime.format())
           // console.log(time.endTime.format())
@@ -225,17 +222,17 @@ export default {
     rnd(a, b) {
       return Math.floor((b - a + 1) * Math.random()) + a;
     },
-  //  current time
-    getCurrentTime () {
+    //  current time
+    getCurrentTime() {
       return this.cal ? this.cal.times.now.hour * 60 + this.cal.times.now.minute : 0
     },
-    scrollToTime () {
+    scrollToTime() {
       const time = this.getCurrentTime()
       const first = Math.max(0, time - (time % 30) - 30)
 
       this.cal.scrollToTime(first)
     },
-    updateTime () {
+    updateTime() {
       setInterval(() => this.cal.updateTimes(), 60 * 1000)
     },
     //end
