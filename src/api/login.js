@@ -13,9 +13,12 @@ const userApi = {
     UserMenu: '/user/nav',
     //get shift id
     ShiftId:'/shift/{id}'
-
 }
 
 export async function login(loginParam) {
     return request.post(userApi.Login, loginParam)
+}
+
+export async function deleteShift(id) {
+    return request.delete_('/shift/'+id)
 }

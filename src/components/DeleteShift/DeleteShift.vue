@@ -1,27 +1,29 @@
 <template>
-  <v-btn
-      color="success"
-      class="mr-4"
-      @click="DeleteShift"
-  >
-    Delete
-  </v-btn>
+  <div>
+    <input v-model="id">
+    <v-btn
+        color="success"
+        class="mr-4"
+        @click="delete_"
+    >
+      Delete
+    </v-btn>
+  </div>
+
 </template>
 
 <script>
+import {deleteShift} from '@/api/login'
 export default {
-  name: "DeleteShift.vue",
-  props: ['Local'],          // 获取父组件的传值
+  name: "DeleteShift",
   data () {
     return {
-
+    id:-1
     }
   },
   methods: {
-    onClick () {
-      console.log('点击了子组件')
-// 通过触发自定义事件修改父组件传递的text
-      this.$emit('event1', '我修改了text')
+    delete_ () {
+      deleteShift(this.id)
     }
   }
 }

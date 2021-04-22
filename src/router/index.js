@@ -3,7 +3,7 @@ import VueRouter from 'vue-router'
 import CalendarDemo from '../components/CalendarDemo/CalendarDemo'
 import Login from "@/components/Login/Login";
 import BasicLayout from "@/layouts/BasicLayout"
-
+import DeleteShift from "@/components/DeleteShift/DeleteShift";
 Vue.use(VueRouter)
 
 const routes = [
@@ -29,8 +29,18 @@ const routes = [
         meta: {
             title: 'Login'
         }
+    },
+    //login
+    {
+        path: '/deleteShift',
+        component: DeleteShift,
+        meta: {
+            title: 'Del shift'
+        }
     }
 ]
+
+
 
 const router = new VueRouter({
     mode: 'history',
