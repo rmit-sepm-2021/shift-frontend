@@ -1,34 +1,48 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Home from '../views/Home.vue'
-import CalendarDemo from '../components/CalendarDemo/CalendarDemo'
+import Calendar from '../components/Calendar/Calendar'
+import Login from "@/components/Login/Login";
+import BasicLayout from "@/layouts/BasicLayout"
+import Profile from '../components/Profile/Profile'
+
 Vue.use(VueRouter)
 
 const routes = [
-  {
-    path: '/',
-    name: 'Home',
-    component: Home
-  },
-  {
-    path: '/about',
-    name: 'About',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import( '../views/About.vue')
-  },
-  {
-    path:'/calendarDemo',
-    name:"calendar",
-    component:CalendarDemo
-  }
+    //Dashboard
+    {
+        path: '/',
+        component: BasicLayout,
+        children: [
+            {
+                path: 'dashboard',
+                component: Calendar,
+                meta: {
+                    title: 'Dashboard'
+                }
+            },
+        ]
+    },
+
+    //login
+    {
+        path: '/login',
+        component: Login,
+        meta: {
+            title: 'Login'
+        }
+    },
+    //profile
+    {
+        path:'/profile',
+        name:"profile",
+        component:Profile
+      }
 ]
 
 const router = new VueRouter({
-  mode: 'history',
-  base: process.env.BASE_URL,
-  routes
+    mode: 'history',
+    base: process.env.BASE_URL,
+    routes
 })
 
 export default router

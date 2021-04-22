@@ -1,34 +1,34 @@
 <template>
   <v-app>
-    <BlankLayout>
-      <router-view></router-view>
-    </BlankLayout>
+
+    <router-view></router-view>
+
   </v-app>
 </template>
 
 <script>
+
 // import HelloWorld from './components/HelloWorld';
 import router from "./router/index.js";
-import BlankLayout from "./layouts/BlankLayout";
+
 export default {
   name: "App",
   router,
-  components: {
-    BlankLayout,
-  },
 
   data: () => ({
     //
   }),
 };
 </script>
-<style >
+<style>
 a {
   text-decoration: none !important;
 }
+
 .router-link-active {
   text-decoration: none !important;
 }
+
 .router-link-exact-active {
   text-decoration: none !important;
 }
