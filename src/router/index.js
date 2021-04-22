@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import Calendar from '../components/Calendar/Calendar'
 import Login from "@/components/Login/Login";
 import BasicLayout from "@/layouts/BasicLayout"
+import Profile from '../components/Profile/Profile'
 
 Vue.use(VueRouter)
 
@@ -29,7 +30,13 @@ const routes = [
         meta: {
             title: 'Login'
         }
-    }
+    },
+    //profile
+    {
+        path:'/profile',
+        name:"profile",
+        component:Profile
+      }
 ]
 
 const router = new VueRouter({
