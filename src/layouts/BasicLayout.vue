@@ -96,7 +96,7 @@ export default {
         ]
       } else {
         return [
-          ["mdi-inbox-arrow-down", "Profile", "/profile"],
+          ["mdi-inbox-arrow-down", "Profile", "/profile", "doNothing"],
           ["mdi-send", "User", "/"],
           ["mdi-send", "Create Account", "/manager/accounts"],
           ["mdi-delete", "Time", "/"],
