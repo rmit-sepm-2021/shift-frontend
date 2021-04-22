@@ -47,7 +47,7 @@
                 <v-date-picker
                     v-model="startDate"
                     @input="startDateMenu = false"
-                    :allowed-dates="allowedDates"
+                    :allowed-dates="allowedStartDates"
                 ></v-date-picker>
               </v-menu>
             </v-col>
@@ -115,7 +115,7 @@
                 <v-date-picker
                     v-model="endDate"
                     @input="endDateMenu = false"
-                    :allowed-dates="allowedDates"
+                    :allowed-dates="allowedEndDates"
                 ></v-date-picker>
               </v-menu>
             </v-col>
@@ -183,14 +183,23 @@
 </template>
 
 <script>
+import {mapState} from "vuex";
+import {postFreeTime} from "@/api/availableTime"
+
 let moment = require('moment');
 export default {
   name: "FreeTimeDialog",
+  computed: {
+    ...mapState({
+      id: state => state.user.id,
+    }),
+
+  },
   data: () => ({
     //free-time
     startDate: moment().format("YYYY-MM-DD"),
-    endDate: moment().format("YYYY-MM-DD"),
     startTime: moment().format("HH:mm"),
+    endDate: moment().format("YYYY-MM-DD"),
     endTime: moment().format("HH:mm"),
     timePickerMenu: false,
     startTimeMenu: false,
@@ -201,12 +210,37 @@ export default {
     // end
   }),
   methods: {
-    allowedDates(date) {
-      return moment(date, "YYYY-MM-DD").isBetween(moment(), moment().add(2, 'week'))
+    allowedEndDates(date) {
+      return moment(date, "YYYY-MM-DD").isBetween(this.startDate, moment().add(2, 'week'))
+    },
+    allowedStartDates(date) {
+      const mDate = moment(date, "YYYY-MM-DD")
+      const date2w = moment().add(2, 'week')
+      return mDate.isBetween(moment(), date2w) || mDate.isSame(moment())
     },
     allowedMinutes: v => v % 30 === 0,
     handleSelectFreeTime() {
-      console.log(this.datePicker)
+      const startDateTime = this.startDate + " " + this.startTime
+      const endDateTime = this.endDate + " " + this.endTime
+      const startTimestamp = moment(startDateTime).valueOf()
+      const endTimestamp = moment(endDateTime).valueOf()
+      if (startTimestamp > endTimestamp) {
+        alert("Please select a correct end date time")
+        return
+      }
+      const param = {
+        staffId: this.id,
+        startTime: startTimestamp,
+        endTime: endTimestamp,
+
+      }
+      console.log({param})
+
+      postFreeTime(param).then((res) => {
+        if (res.code === 500) {
+          alert("Add Free time failed. Time may be overlap")
+        }
+      })
       this.dialog = false
     }
   }

@@ -2,8 +2,13 @@
   <div>
 
     <v-sheet tile height="54" class="d-flex">
+
+
       <v-btn icon class="ma-2" @click="$refs.calendar.prev()">
         <v-icon>mdi-chevron-left</v-icon>
+      </v-btn>
+      <v-btn icon class="ma-2" @click="$refs.calendar.next()">
+        <v-icon>mdi-chevron-right</v-icon>
       </v-btn>
       <v-select
           v-model="type"
@@ -14,29 +19,21 @@
           class="ma-2"
           label="type"
       ></v-select>
-      <v-select
-          v-model="mode"
-          :items="modes"
-          dense
+      <v-btn
           outlined
-          hide-details
-          label="event-overlap-mode"
-          class="ma-2"
-      ></v-select>
-      <v-select
-          v-model="weekday"
-          :items="weekdays"
-          dense
-          outlined
-          hide-details
-          label="weekdays"
-          class="ma-2"
-      ></v-select>
-      <FreeTimeDialog></FreeTimeDialog>
-      <v-spacer></v-spacer>
-      <v-btn icon class="ma-2" @click="$refs.calendar.next()">
-        <v-icon>mdi-chevron-right</v-icon>
+          class="mr-4"
+          color="grey darken-2"
+          @click="setToday"
+      >
+        Today
       </v-btn>
+      <v-toolbar-title v-if="$refs.calendar">
+        {{ $refs.calendar.title }}
+      </v-toolbar-title>
+      <v-spacer></v-spacer>
+      <FreeTimeDialog v-if="!isManager"></FreeTimeDialog>
+
+
     </v-sheet>
     <v-sheet height="600">
 
@@ -51,18 +48,33 @@
           :event-overlap-threshold="30"
           :event-color="getEventColor"
           @change="getEvents"
-      ></v-calendar>
+          interval-minutes="30"
+          interval-count="48"
+          @click:more="viewDay"
+          @click:date="viewDay"
+      >
+        <template v-slot:day-body="{ date, week }">
+          <div
+              class="v-current-time"
+              :class="{ first: date === week[0].date }"
+              :style="{ top: nowY }"
+          ></div>
+        </template>
+      </v-calendar>
     </v-sheet>
   </div>
 </template>
 
 <script>
 import FreeTimeDialog from "@/components/FreeTimeDialog/FreeTimeDialog";
+import {mapGetters, mapState} from "vuex";
+import {getFreeTime} from "@/api/availableTime"
 
 let moment = require('moment');
 
 export default {
   components: {FreeTimeDialog},
+
   data: () => ({
     //free-time
     startDate: moment().format("YYYY-MM-DD"),
@@ -75,19 +87,15 @@ export default {
     startDateMenu: false,
     endDateMenu: false,
     dialog: false,
-
+    freeTime: [],
     // end
-    type: "month",
-    types: ["month", "week", "day", "4day"],
-    mode: "column",
-    modes: ["stack", "column"],
-    weekday: [0, 1, 2, 3, 4, 5, 6],
-    weekdays: [
-      {text: "Sun - Sat", value: [0, 1, 2, 3, 4, 5, 6]},
-      {text: "Mon - Sun", value: [1, 2, 3, 4, 5, 6, 0]},
-      {text: "Mon - Fri", value: [1, 2, 3, 4, 5]},
-      {text: "Mon, Wed, Fri", value: [1, 3, 5]},
-    ],
+    // current time line
+    ready: false,
+    // end
+    type: "week",
+    types: ["month", "week","day"],
+    mode: "stack",
+    weekday: [1, 2, 3, 4, 5, 6, 0],
     value: "",
     colors: [
       "blue",
@@ -98,47 +106,89 @@ export default {
       "orange",
       "grey darken-1",
     ],
-    names: [
-      "Meeting",
-      "Holiday",
-      "PTO",
-      "Travel",
-      "Event",
-      "Birthday",
-      "Conference",
-      "Party",
-    ],
   }),
+
+  mounted() {
+    // current time
+    this.ready = true
+    this.scrollToTime()
+    this.updateTime()
+    // end
+    const param = {
+      staffId: this.id
+    }
+    getFreeTime(param).then(res => {
+      const data = res.data
+      const tmp = []
+      for (const time of data) {
+        tmp.push({
+          startTime: moment(time.startTime),
+          endTime: moment(time.endTime)
+        })
+
+      }
+      this.freeTime = tmp
+      console.log(res)
+    })
+  },
   computed: {
+    // current time
+    nowY () {
+      return this.cal ? this.cal.timeToY(this.cal.times.now) + 'px' : '-10px'
+    },
+    cal () {
+      return this.ready ? this.$refs.calendar : null
+    },
+    // end
+    ...mapState({
+      id: state => state.user.id
+    }),
+
+    ...mapGetters([
+      'isManager',
+    ]),
     events() {
       return [
-      //     {
-      //   name: "My free time",
-      //   start: moment().toDate(),
-      //   end: moment().add(7, "days").toDate(),
-      //   color: "green",
-      //   timed: true,
-      // }, {
-      //   name: "My free tim2e",
-      //   start: moment().toDate(),
-      //   end: moment().add(7, "days").toDate(),
-      //   color: "green",
-      //   timed: true,
-      // }
+        //     {
+        //   name: "My free time",
+        //   start: moment().toDate(),
+        //   end: moment().add(7, "days").toDate(),
+        //   color: "green",
+        //   timed: true,
+        // }, {
+        //   name: "My free tim2e",
+        //   start: moment().toDate(),
+        //   end: moment().add(7, "days").toDate(),
+        //   color: "green",
+        //   timed: true,
+        // }
       ]
     },
   },
   methods: {
+    viewDay ({ date }) {
+      this.value = date
+      this.type = 'day'
+    },
+    setToday () {
+      this.value = ''
+    },
     intervalStyle(interval) {
-      console.log(interval)
-      if (interval.hour > moment().hour() && interval.hour < moment().hour() + 10) {
-        return {
-          backgroundColor: 'green'
-        }
-      } else {
-        return {backgroundColor: undefined}
+      // console.log(interval)
 
+      const mInterval = moment(interval.date + " " + interval.time)
+      for (const time of this.freeTime) {
+
+        if (mInterval.isBetween(time.startTime, time.endTime,null,'[]')) {
+          // console.log(mInterval.format())
+          // console.log(time.startTime.format())
+          // console.log(time.endTime.format())
+          return {
+            backgroundColor: '#99FFCC'
+          }
+        }
       }
+      return {backgroundColor: undefined}
 
 
     },
@@ -175,9 +225,42 @@ export default {
     rnd(a, b) {
       return Math.floor((b - a + 1) * Math.random()) + a;
     },
+  //  current time
+    getCurrentTime () {
+      return this.cal ? this.cal.times.now.hour * 60 + this.cal.times.now.minute : 0
+    },
+    scrollToTime () {
+      const time = this.getCurrentTime()
+      const first = Math.max(0, time - (time % 30) - 30)
+
+      this.cal.scrollToTime(first)
+    },
+    updateTime () {
+      setInterval(() => this.cal.updateTimes(), 60 * 1000)
+    },
+    //end
   },
 };
 </script>
 
-<style>
+<style scoped lang="scss">
+.v-current-time {
+  height: 2px;
+  background-color: #ea4335;
+  position: absolute;
+  left: -1px;
+  right: 0;
+  pointer-events: none;
+
+  &.first::before {
+    content: '';
+    position: absolute;
+    background-color: #ea4335;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin-top: -5px;
+    margin-left: -6.5px;
+  }
+}
 </style>

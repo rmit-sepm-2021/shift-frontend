@@ -12,7 +12,7 @@
         <v-list>
           <v-list-item v-if="isManager"  @click="switchToStaff">
             <v-list-item-content>
-              <v-list-item-title>Switch to Manager</v-list-item-title>
+              <v-list-item-title>Switch to Staff</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
           <v-list-item v-else  @click="switchToManager">
@@ -56,7 +56,7 @@ export default {
     if (!auth.isLogged()) {
       alert("Connecting to the server...")
       Login(loginParams).then((res) => {
-        console.log("in dashboard")
+
         console.log(res)
         const data = res['data']
         auth.setToken(data['token'])
@@ -118,7 +118,7 @@ export default {
       //TODO start here
       alert("Connecting to the server...")
       Login(loginParams).then((res) => {
-        console.log("in dashboard")
+
         console.log(res)
         const data = res['data']
         auth.setToken(data['token'])
@@ -132,7 +132,7 @@ export default {
       //TODO start here
       alert("Connecting to the server...")
       Login(loginParams).then((res) => {
-        console.log("in dashboard")
+
         console.log(res)
         const data = res['data']
         auth.setToken(data['token'])

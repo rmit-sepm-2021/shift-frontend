@@ -6,6 +6,7 @@ import {login} from '@/api/login'
 
 const user = {
     state: {
+        id: 0,
         token: '',
         name: '',
         email: '',
@@ -25,6 +26,9 @@ const user = {
         SET_EMAIL: (state, email) => {
             state.email = email
         },
+        SET_USER: (state, user) => {
+            Object.assign(state, user)
+        },
     },
     actions: {
         Login({commit}, param) {
@@ -32,10 +36,7 @@ const user = {
                 login(param).then(response => {
                     console.log(response)
                     const data = response.data
-                    commit('SET_EMAIL', data.email)
-                    commit('SET_NAME', data.name)
-                    commit('SET_ROLE', data.role)
-                    commit('SET_TOKEN', data.token)
+                    commit('SET_USER', data)
                     resolve(response)
                 }).catch(error => {
                     reject(error)
@@ -53,7 +54,8 @@ const user = {
                 Abbr += i[0]
             }
             return Abbr
-        }
+        },
+        isManager: (state) => state.role === "MANAGER"
     }
 }
 export default user
