@@ -27,15 +27,11 @@
               <v-card-text>
                 <v-container>
                   <v-row>
-                    <v-col
-                        cols="12"
-                        sm="6"
-                        md="4"
-                    >
+                    <v-col cols="12">
                       <v-text-field
-                          v-model="staffId"
-                          type="long"
-                          label="staff_id*"
+                          v-model="title"
+                          type="String"
+                          label="title*"
                           :rules="FieldRequiredRule"
                           required
                       ></v-text-field>
@@ -46,10 +42,10 @@
                         md="4"
                     >
                       <v-text-field
-                          v-model="startTime"
-                          type="time"
-                          :rules="TimeRules"
-                          label="start_time*"
+                          v-model="Id"
+                          type="Long"
+                          label="id*"
+                          :rules="FieldRequiredRule"
                           required
                       ></v-text-field>
                     </v-col>
@@ -59,12 +55,82 @@
                         md="4"
                     >
                       <v-text-field
-                          v-model="endTime"
-                          type="time"
-                          :rules="TimeRules"
-                          label="end_time*"
+                          v-model="staffId"
+                          type="Long"
+                          label="staff_id*"
+                          :rules="FieldRequiredRule"
                           required
                       ></v-text-field>
+                    </v-col>
+                    <v-col
+                        cols="12"
+                        sm="6"
+                        md="4"
+                    >
+                      <v-menu
+                          ref="endTimeMenu"
+                          v-model="startTimeMenu"
+                          :close-on-content-click="false"
+                          :nudge-right="40"
+                          :return-value.sync="startTime"
+                          transition="scale-transition"
+                          offset-y
+                          max-width="290px"
+                          min-width="290px"
+                      >
+                        <template v-slot:activator="{ on, attrs }">
+                          <v-text-field
+                              v-model="startTime"
+                              label="Pick an start time"
+                              prepend-icon="mdi-clock-time-four-outline"
+                              readonly
+                              v-bind="attrs"
+                              v-on="on"
+                          ></v-text-field>
+                        </template>
+                        <v-time-picker
+                            v-if="startTimeMenu"
+                            v-model="startTime"
+                            full-width
+                            @click:minute="$refs.startTimeMenu.save(startTime)"
+                            :allowed-minutes="allowedMinutes"
+                        ></v-time-picker>
+                      </v-menu>
+                    </v-col>
+                    <v-col
+                        cols="12"
+                        sm="6"
+                        md="4"
+                    >
+                      <v-menu
+                          ref="endTimeMenu"
+                          v-model="endTimeMenu"
+                          :close-on-content-click="false"
+                          :nudge-right="40"
+                          :return-value.sync="endTime"
+                          transition="scale-transition"
+                          offset-y
+                          max-width="290px"
+                          min-width="290px"
+                      >
+                        <template v-slot:activator="{ on, attrs }">
+                          <v-text-field
+                              v-model="endTime"
+                              label="Pick an end time"
+                              prepend-icon="mdi-clock-time-four-outline"
+                              readonly
+                              v-bind="attrs"
+                              v-on="on"
+                          ></v-text-field>
+                        </template>
+                        <v-time-picker
+                            v-if="endTimeMenu"
+                            v-model="endTime"
+                            full-width
+                            @click:minute="$refs.endTimeMenu.save(endTime)"
+                            :allowed-minutes="allowedMinutes"
+                        ></v-time-picker>
+                      </v-menu>
                     </v-col>
                     <v-col
                         cols="12"
@@ -73,7 +139,7 @@
                     >
                       <v-text-field
                           v-model="managerId"
-                          type="long"
+                          type="Long"
                           label="manager_id*"
                           :rules="FieldRequiredRule"
                           required
@@ -87,50 +153,55 @@
                       <v-text-field
                           prepend-icon="mdi-map-marker"
                           v-model="locationId"
-                          type="long"
+                          type="Long"
                           label="location_id*"
                           :rules="FieldRequiredRule"
                           required
                       ></v-text-field>
                     </v-col>
-                    <v-col
-                        cols="12"
-                        sm="6"
-                        md="4"
-                    >
-                      <v-text-field
+                    <v-col cols="12">
+                      <v-menu
                           v-model="createdTime"
-                          type="date"
-                          label="created_time*"
-                          :rules="FieldRequiredRule"
-                          required
-                      ></v-text-field>
+                          :close-on-content-click="false"
+                          :nudge-right="40"
+                          transition="scale-transition"
+                          offset-y
+                          min-width="auto"
+                      >
+                        <template v-slot:activator="{ on, attrs }">
+                          <v-text-field
+                              v-model="createdTime"
+                              label="Pick a created date"
+                              prepend-icon="mdi-calendar"
+                              readonly
+                              v-bind="attrs"
+                              v-on="on"
+                          ></v-text-field>
+                        </template>
+                        <v-date-picker
+                            v-model="createdTime"
+                            @input="createdTimeeMenu = false"
+                            :allowed-dates="allowedEndDates"
+                        ></v-date-picker>
+                      </v-menu>
                     </v-col>
                     <v-col cols="12">
                       <v-text-field
                           v-model="status"
-                          type="varchar"
+                          type="String"
                           label="status*"
                           :rules="FieldRequiredRule"
                           required
                       ></v-text-field>
                     </v-col>
-                    <v-col cols="12">
-                      <v-text-field
-                          v-model="title"
-                          type="varchar"
-                          label="title*"
-                          :rules="FieldRequiredRule"
-                          required
-                      ></v-text-field>
-                    </v-col>
+
                     <v-col
                         cols="12"
                         md="12"
                     >
                       <v-textarea
                           v-model="description"
-                          type="longtext"
+                          type="String"
                           outlined
                           label="Description"
                       ></v-textarea>
@@ -178,6 +249,8 @@
 import {createShift} from "@/api/login"
 import {mapState} from 'vuex'
 
+let moment = require('moment');
+
 export default {
   name: "CreateShift",
 
@@ -185,9 +258,19 @@ export default {
     dialog: false,
     formTitle: "New Shift Detail",
 
+    staffId: this.id,
+    startTime: moment().format("HH:mm"),
+    endTime: moment().format("HH:mm"),
+    managerId: this.id,
+    locationId: this.id,
+    createdTime: moment().format("YYYY-MM-DD"),
+    status: 0,
+    title: "dd",
+    description: "ss",
+
     TimeRules: [
       v => !! v || 'Time is required',
-      v => v <= 4 || 'Standard Duration of a shift is 4h',
+
     ],
 
     FieldRequiredRule: [
@@ -210,21 +293,31 @@ export default {
       }
       if (isValid) {
         const {
-          staffId, startTime, endTime, managerId, locationId, createdTime, status, title, description
+          Id,
+          staffId,
+          startTime,
+          endTime,
+          managerId,
+          locationId,
+          createdTime,
+          status,
+          title,
+          description
         } = this
         const createShiftParams = {
-          staffId, startTime, endTime, managerId, locationId, createdTime, status, title, description
+          Id, staffId, startTime, endTime, managerId, locationId, createdTime, status, title, description
         }
 
-        createShift(createShiftParams).then(() => {
-          // if (res.code === 200) {
-          //   alert("Shift successfully added")
-          // }
-          // this.dialog = false
-          // window.location.reload()
-        })
+        if (endTime - startTime <= 4){
+          createShift(createShiftParams).then((res) => {
+            if (res.code === 200) {
+              alert("Shift successfully added")
+            }
+            this.dialog = false
+            window.location.reload()
+          })
+        }
       }
-
       this.$refs.form.resetValidation()
     },
 
@@ -235,7 +328,6 @@ export default {
     close() {
       this.dialog = false
     },
-
   }
 }
 </script>
