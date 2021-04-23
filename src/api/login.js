@@ -10,9 +10,14 @@ const userApi = {
     SendSmsErr: '/account/sms_err',
     // get my info
     UserInfo: '/user/info',
-    UserMenu: '/user/nav'
+    UserMenu: '/user/nav',
+    AddNewShift: '/addNewShift'
 }
 
 export async function login(loginParam) {
     return request.post(userApi.Login, loginParam)
+}
+
+export async function addNewShift(param) {
+    return request.post(userApi.AddNewShift, param)
 }

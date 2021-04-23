@@ -4,6 +4,7 @@ import Calendar from '../components/Calendar/Calendar'
 import Login from "@/components/Login/Login";
 import BasicLayout from "@/layouts/BasicLayout"
 import Profile from '../components/Profile/Profile'
+import AddNewShift from "../components/AddNewShift/AddNewShift";
 
 Vue.use(VueRouter)
 
@@ -36,7 +37,16 @@ const routes = [
         path:'/profile',
         name:"profile",
         component:Profile
-      }
+    },
+
+    //addNewShift
+    {
+        path: '/addNewShift',
+        component: AddNewShift,
+        meta: {
+            title: 'AddNewShift'
+        }
+    }
 ]
 
 const router = new VueRouter({

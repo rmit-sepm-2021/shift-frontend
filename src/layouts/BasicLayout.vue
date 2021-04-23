@@ -101,6 +101,7 @@ export default {
           ["mdi-send", "Create Account", "/manager/accounts"],
           ["mdi-delete", "Time", "/"],
           ["mdi-alert-octagon", "Shift", "/"],
+          ["mdi-send", "AddNewShift", "/AddNewShift"]
         ]
       }
     },
