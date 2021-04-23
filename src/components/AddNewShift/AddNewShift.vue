@@ -48,7 +48,7 @@
                       <v-text-field
                           v-model="startTime"
                           type="time"
-                          :rules="TimeRule"
+                          :rules="TimeRules"
                           label="start_time*"
                           required
                       ></v-text-field>
@@ -161,7 +161,7 @@
                     color="blue darken-1"
                     text
                     class="mr-4"
-                    @click="handleSubmit"
+                    @click="add"
                 >
                   Add
                 </v-btn>
@@ -181,13 +181,13 @@ import {mapState} from 'vuex'
 export default {
   name: "AddNewShift",
 
-
   data: () => ({
     dialog: false,
     formTitle: "New Shift Detail",
 
     TimeRules: [
-      // v <= 4,
+      v => !! v || 'Time is required',
+      v => v <= 4 || 'Standard Duration of a shift is 4h',
     ],
 
     FieldRequiredRule: [
@@ -205,7 +205,7 @@ export default {
   methods: {
     add() {
       const isValid = this.$refs.form.validate()
-      if (!confirm("Are you sure you want to create this account?")) {
+      if (!confirm("Are you sure you want to add this shift?")) {
         return;
       }
       if (isValid) {
@@ -224,6 +224,8 @@ export default {
           window.location.reload()
         })
       }
+
+      this.$refs.form.resetValidation()
     },
 
     reset() {
@@ -235,24 +237,6 @@ export default {
     },
 
   }
-
-
-      // if (!this.$refs.form.validate()) {
-      //   this.validateAlert = !this.validateAlert
-      //   return
-      // }
-
-      // AddNewShift(addNewShiftParams).then(() => {
-      //   console.log(res)
-      //   const data = res.data
-      //   this.loginAlert = !this.loginAlert
-      //   auth.setToken(data['token'])
-      //   setTimeout(() => {
-      //     this.$router.push('/')
-      //   }, 2000)
-      // })
-
-
 }
 </script>
 
