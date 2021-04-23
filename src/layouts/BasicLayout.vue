@@ -10,12 +10,12 @@
         </v-sheet>
         <v-divider></v-divider>
         <v-list>
-          <v-list-item v-if="isManager"  @click="switchToStaff">
+          <v-list-item v-if="isManager" @click="switchToStaff">
             <v-list-item-content>
               <v-list-item-title>Switch to Staff</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
-          <v-list-item v-else  @click="switchToManager">
+          <v-list-item v-else @click="switchToManager">
             <v-list-item-content>
               <v-list-item-title>Switch to Manager</v-list-item-title>
             </v-list-item-content>
@@ -89,19 +89,18 @@ export default {
       console.log({role: this.role})
       if (this.role === "STAFF") {
         return [
-          ["mdi-inbox-arrow-down", "Profile", "/profile"],
-          ["mdi-send", "User", "/"],
-          ["mdi-delete", "Time", "/"],
-          ["mdi-alert-octagon", "Shift", "/"],
+          ["mdi-bell", "Notification", "/staff/notification"],
+          ["mdi-account", "Profile", "/staff/profile", "doNothing"],
+          ["mdi-timetable", "My Shift", "/staff/shifts"],
+
         ]
       } else {
         return [
-          ["mdi-inbox-arrow-down", "Profile", "/profile"],
-          ["mdi-send", "User", "/"],
-          ["mdi-send", "Create Account", "/manager/accounts"],
-          ["mdi-delete", "Time", "/"],
-          ["mdi-alert-octagon", "Shift", "/"],
-          ["mdi-send", "AddNewShift", "/AddNewShift"]
+          ["mdi-bell", "Notification", "/manager/notification"],
+          ["mdi-account", "Profile", "/manager/profile"],
+          ["mdi-account-box-multiple", "Account List", "/manager/accounts"],
+          ["mdi-timetable", "Shift List", "/manager/shifts"],
+
         ]
       }
     },
@@ -123,6 +122,7 @@ export default {
         console.log(res)
         const data = res['data']
         auth.setToken(data['token'])
+        this.$router.push('/dashboard')
       })
     },
     loginAsManager() {
@@ -137,16 +137,20 @@ export default {
         console.log(res)
         const data = res['data']
         auth.setToken(data['token'])
+        this.$router.push('/dashboard')
       })
     },
     ...mapActions(['Login']),
     doNothing() {
     },
     switchToStaff() {
+
       this.loginAsStaff()
+
     },
     switchToManager() {
       this.loginAsManager()
+
     },
   }
 };

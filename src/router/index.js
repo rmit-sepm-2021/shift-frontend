@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Calendar from '../components/Calendar/Calendar'
 import Login from "@/components/Login/Login";
+import AccountTable from "@/components/Account/AccountTable";
 import BasicLayout from "@/layouts/BasicLayout"
 import Profile from '../components/Profile/Profile'
 import AddNewShift from "../components/AddNewShift/AddNewShift";
@@ -19,6 +20,13 @@ const routes = [
                 component: Calendar,
                 meta: {
                     title: 'Dashboard'
+                }
+            },
+            {
+                path: 'manager/accounts',
+                component: AccountTable,
+                meta: {
+                    title: 'Accounts'
                 }
             },
         ]

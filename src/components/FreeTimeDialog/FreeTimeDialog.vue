@@ -82,7 +82,7 @@
                     v-if="startTimeMenu"
                     v-model="startTime"
                     full-width
-                    format="24hr"
+
                     @click:minute="$refs.startTimeMenu.save(startTime)"
                     :allowed-minutes="allowedMinutes"
                 ></v-time-picker>
@@ -152,7 +152,7 @@
                     v-if="endTimeMenu"
                     v-model="endTime"
                     full-width
-                    format="24hr"
+
                     @click:minute="$refs.endTimeMenu.save(endTime)"
                     :allowed-minutes="allowedMinutes"
                 ></v-time-picker>
@@ -211,7 +211,7 @@ export default {
   }),
   methods: {
     allowedEndDates(date) {
-      return moment(date, "YYYY-MM-DD").isBetween(this.startDate, moment().add(2, 'week'))
+      return moment(date, "YYYY-MM-DD").isBetween(this.startDate, moment().add(2, 'week'),null,'[]')
     },
     allowedStartDates(date) {
       const mDate = moment(date, "YYYY-MM-DD")
@@ -239,7 +239,10 @@ export default {
       postFreeTime(param).then((res) => {
         if (res.code === 500) {
           alert("Add Free time failed. Time may be overlap")
+        } else {
+          window.location.reload()
         }
+
       })
       this.dialog = false
     }
