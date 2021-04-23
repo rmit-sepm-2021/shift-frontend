@@ -11,13 +11,14 @@ const userApi = {
     // get my info
     UserInfo: '/user/info',
     UserMenu: '/user/nav',
-    AddNewShift: '/addNewShift'
+    // add new shift
+    CreateShift: '/shift'
 }
 
 export async function login(loginParam) {
     return request.post(userApi.Login, loginParam)
 }
 
-export async function addNewShift(param) {
-    return request.post(userApi.AddNewShift, param)
+export async function createShift(param) {
+    return request.post(userApi.CreateShift, param)
 }

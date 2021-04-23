@@ -5,7 +5,7 @@ import Login from "@/components/Login/Login";
 import AccountTable from "@/components/Account/AccountTable";
 import BasicLayout from "@/layouts/BasicLayout"
 import Profile from '../components/Profile/Profile'
-import AddNewShift from "../components/AddNewShift/AddNewShift";
+import CreateShift from "../components/CreateShift/CreateShift";
 
 Vue.use(VueRouter)
 
@@ -49,10 +49,10 @@ const routes = [
 
     //addNewShift
     {
-        path: '/addNewShift',
-        component: AddNewShift,
+        path: '/createShift',
+        component: CreateShift,
         meta: {
-            title: 'AddNewShift'
+            title: 'CreateShift'
         }
     }
 ]

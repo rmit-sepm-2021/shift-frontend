@@ -175,11 +175,11 @@
 </template>
 
 <script>
-// import {addNewShift} from "@/api/login"
+import {createShift} from "@/api/login"
 import {mapState} from 'vuex'
 
 export default {
-  name: "AddNewShift",
+  name: "CreateShift",
 
   data: () => ({
     dialog: false,
@@ -191,7 +191,7 @@ export default {
     ],
 
     FieldRequiredRule: [
-        'This field is required'
+        v => !! v || 'This field is required'
     ],
 
   }),
@@ -210,18 +210,18 @@ export default {
       }
       if (isValid) {
         const {
-          addNewShift, staffId, startTime, endTime, managerId, locationId, createdTime, status, title, description
+          staffId, startTime, endTime, managerId, locationId, createdTime, status, title, description
         } = this
-        const addNewShiftParams = {
+        const createShiftParams = {
           staffId, startTime, endTime, managerId, locationId, createdTime, status, title, description
         }
 
-        addNewShift(addNewShiftParams).then((res) => {
-          if (res.code === 200) {
-            alert("Shift successfully added")
-          }
-          this.dialog = false
-          window.location.reload()
+        createShift(createShiftParams).then(() => {
+          // if (res.code === 200) {
+          //   alert("Shift successfully added")
+          // }
+          // this.dialog = false
+          // window.location.reload()
         })
       }
 
