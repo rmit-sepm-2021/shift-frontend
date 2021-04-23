@@ -41,7 +41,7 @@ const routes = [
     },
     //profile
     {
-        path:'/profile',
+        path:'/manager/profile',
         name:"profile",
         component:Profile
       }

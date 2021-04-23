@@ -16,6 +16,10 @@ const userApi = {
 export async function login(loginParam) {
     return request.post(userApi.Login, loginParam)
 }
-export async function getUserInfo(infoParam) {
-    return request.post('/staff', infoParam)
+export async function getStaffInfo(id) {
+    return request.get('/staff/'+id)
+}
+
+export async function updateStaffInfo(param) {
+    return request.put('/staff/update',param)
 }

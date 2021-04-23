@@ -90,7 +90,7 @@ export default {
       if (this.role === "STAFF") {
         return [
           ["mdi-bell", "Notification", "/staff/notification"],
-          ["mdi-account", "Profile", "/staff/profile", "doNothing"],
+          ["mdi-account", "Profile", "/staff/profile"],
           ["mdi-timetable", "My Shift", "/staff/shifts"],
 
         ]
