@@ -11,6 +11,8 @@ const userApi = {
     // get my info
     UserInfo: '/user/info',
     UserMenu: '/user/nav',
+    //get shift id
+    ShiftId:'/shift/{id}',
     // add new shift
     CreateShift: '/shift'
 }
@@ -18,6 +20,11 @@ const userApi = {
 export async function login(loginParam) {
     return request.post(userApi.Login, loginParam)
 }
+
+export async function deleteShift(id) {
+    return request.delete_('/shift/'+id)
+}
+
 
 export async function createShift(param) {
     return request.post(userApi.CreateShift, param)

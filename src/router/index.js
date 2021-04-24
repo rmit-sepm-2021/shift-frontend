@@ -4,6 +4,7 @@ import Calendar from '../components/Calendar/Calendar'
 import Login from "@/components/Login/Login";
 import AccountTable from "@/components/Account/AccountTable";
 import BasicLayout from "@/layouts/BasicLayout"
+import DeleteShift from "@/components/DeleteShift/DeleteShift";
 import Profile from '../components/Profile/Profile'
 import ShiftTable from "@/components/ShiftTable/ShiftTable";
 import CreateShift from "../components/CreateShift/CreateShift";
@@ -46,6 +47,14 @@ const routes = [
         component: Login,
         meta: {
             title: 'Login'
+        }
+    },
+    //login
+    {
+        path: '/deleteShift',
+        component: DeleteShift,
+        meta: {
+            title: 'Del shift'
         }
     },
     //profile
