@@ -161,10 +161,10 @@ export default {
   },
   computed: {
     // current time
-    nowY() {
+    nowY () {
       return this.cal ? this.cal.timeToY(this.cal.times.now) + 'px' : '-10px'
     },
-    cal() {
+    cal () {
       return this.ready ? this.$refs.calendar : null
     },
     // end

@@ -105,7 +105,7 @@ export default {
           ["mdi-account", "Profile", "/manager/profile"],
           ["mdi-account-box-multiple", "Account List", "/manager/accounts"],
           ["mdi-timetable", "Shift List", "/manager/shifts"],
-
+          ["mdi-send", "CreateShift", "/createShift"],
         ]
       }
     },
@@ -145,13 +145,10 @@ export default {
     doNothing() {
     },
     switchToStaff() {
-
       this.loginAsStaff()
-
     },
     switchToManager() {
       this.loginAsManager()
-
     },
   }
 };

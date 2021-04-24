@@ -6,6 +6,7 @@ import AccountTable from "@/components/Account/AccountTable";
 import BasicLayout from "@/layouts/BasicLayout"
 import Profile from '../components/Profile/Profile'
 import ShiftTable from "@/components/ShiftTable/ShiftTable";
+import CreateShift from "../components/CreateShift/CreateShift";
 
 Vue.use(VueRouter)
 
@@ -49,10 +50,19 @@ const routes = [
     },
     //profile
     {
-        path:'/manager/profile',
+        path:'/profile',
         name:"profile",
         component:Profile
-      }
+    },
+
+    //addNewShift
+    {
+        path: '/createShift',
+        component: CreateShift,
+        meta: {
+            title: 'CreateShift'
+        }
+    }
 ]
 
 const router = new VueRouter({
