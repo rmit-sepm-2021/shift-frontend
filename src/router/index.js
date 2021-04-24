@@ -59,7 +59,12 @@ const routes = [
     },
     //profile
     {
-        path:'/profile',
+        path:'/manager/profile',
+        name:"profile",
+        component:Profile
+    },
+    {
+        path:'/staff/profile',
         name:"profile",
         component:Profile
     },
