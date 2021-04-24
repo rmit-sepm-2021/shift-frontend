@@ -97,10 +97,10 @@
             </v-col>
 
           </v-row>
-          <v-text-field
+          <v-textarea
               v-model.trim="selectedEvent.description"
               label="Description"
-          ></v-text-field>
+          ></v-textarea>
 
         </v-form>
       </v-card-text>
@@ -110,7 +110,7 @@
             color="secondary"
             @click="selectedOpen = false"
         >
-          Cancel
+          Ok
         </v-btn>
 
       </v-card-actions>

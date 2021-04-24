@@ -9,7 +9,9 @@
             </v-avatar>
           </router-link>
 
-          <div>{{ role }} {{ name }} {{ email }}</div>
+          <div>{{ role }}</div>
+          <div>{{ name }}</div>
+          <div>{{ email }}</div>
         </v-sheet>
         <v-divider></v-divider>
         <v-list>
@@ -92,7 +94,7 @@ export default {
       console.log({role: this.role})
       if (this.role === "STAFF") {
         return [
-          ["mdi-bell", "Dashboard", "/dashboard"],
+          ["fa-tachometer-alt", "Dashboard", "/dashboard"],
           ["mdi-bell", "Notification", "/staff/notification"],
           ["mdi-account", "Profile", "/staff/profile"],
           ["mdi-timetable", "My Shift", "/staff/shifts"],
