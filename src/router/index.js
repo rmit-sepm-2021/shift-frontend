@@ -5,6 +5,7 @@ import Login from "@/components/Login/Login";
 import AccountTable from "@/components/Account/AccountTable";
 import BasicLayout from "@/layouts/BasicLayout"
 import Profile from '../components/Profile/Profile'
+import ShiftTable from "@/components/ShiftTable/ShiftTable";
 
 Vue.use(VueRouter)
 
@@ -26,6 +27,13 @@ const routes = [
                 component: AccountTable,
                 meta: {
                     title: 'Accounts'
+                }
+            },
+            {
+                path: 'manager/shifts',
+                component: ShiftTable,
+                meta: {
+                    title: 'Shifts'
                 }
             },
         ]

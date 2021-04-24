@@ -3,9 +3,12 @@
     <v-main>
       <v-navigation-drawer v-model="drawer" app width="15%">
         <v-sheet color="grey lighten-4" class="pa-4">
-          <v-avatar class="mb-4" color="grey darken-1" size="64">
-            <span class="white--text headline">{{ nameAbbreviation }}</span>
-          </v-avatar>
+          <router-link :to="{ name: 'profile'}">
+            <v-avatar class="mb-4" color="grey darken-1" size="64">
+              <span class="white--text headline">{{ nameAbbreviation }}</span>
+            </v-avatar>
+          </router-link>
+
           <div>{{ role }} {{ name }} {{ email }}</div>
         </v-sheet>
         <v-divider></v-divider>
@@ -54,7 +57,7 @@ export default {
     }
     //TODO start here
     if (!auth.isLogged()) {
-      alert("Connecting to the server...")
+
       Login(loginParams).then((res) => {
 
         console.log(res)
@@ -89,6 +92,7 @@ export default {
       console.log({role: this.role})
       if (this.role === "STAFF") {
         return [
+          ["mdi-bell", "Dashboard", "/dashboard"],
           ["mdi-bell", "Notification", "/staff/notification"],
           ["mdi-account", "Profile", "/staff/profile"],
           ["mdi-timetable", "My Shift", "/staff/shifts"],
@@ -96,6 +100,7 @@ export default {
         ]
       } else {
         return [
+          ["fa-tachometer-alt", "Dashboard", "/dashboard"],
           ["mdi-bell", "Notification", "/manager/notification"],
           ["mdi-account", "Profile", "/manager/profile"],
           ["mdi-account-box-multiple", "Account List", "/manager/accounts"],
@@ -115,14 +120,13 @@ export default {
       const loginParams = {
         email: "mask@test.com", password: "123456"
       }
-      //TODO start here
-      alert("Connecting to the server...")
+
       Login(loginParams).then((res) => {
 
         console.log(res)
         const data = res['data']
         auth.setToken(data['token'])
-        this.$router.push('/dashboard')
+        window.location.reload()
       })
     },
     loginAsManager() {
@@ -130,14 +134,11 @@ export default {
       const loginParams = {
         email: "test@qq.com", password: "123456"
       }
-      //TODO start here
-      alert("Connecting to the server...")
       Login(loginParams).then((res) => {
-
         console.log(res)
         const data = res['data']
         auth.setToken(data['token'])
-        this.$router.push('/dashboard')
+        window.location.reload()
       })
     },
     ...mapActions(['Login']),

@@ -49,6 +49,7 @@
           interval-count="48"
           @click:more="viewDay"
           @click:date="viewDay"
+          @click:event="showEvent"
       >
         <template v-slot:day-body="{ date, week }">
           <div
@@ -59,6 +60,7 @@
         </template>
       </v-calendar>
     </v-sheet>
+    <ShiftDetail :selected-event="selectedEvent"  :selected-element="selectedElement"></ShiftDetail>
   </div>
 </template>
 
@@ -66,24 +68,49 @@
 import FreeTimeDialog from "@/components/FreeTimeDialog/FreeTimeDialog";
 import {mapGetters, mapState} from "vuex";
 import {getFreeTime} from "@/api/availableTime"
-
+import {getShiftList} from "@/api/shift";
+import ShiftDetail from "@/components/Calendar/ShiftDetail";
 let moment = require('moment');
-
+const colors = [
+  "blue",
+  "indigo",
+  "deep-purple",
+  "cyan",
+  "green",
+  "orange",
+  "grey darken-1",
+]
+const shiftListToEvents = (list) => {
+  let events = []
+  for (const datum of list) {
+    const mStartTime = moment(datum['startTime']), mEndTime = moment(datum['endTime']),
+        mCreatedTime = moment(datum['createdTime'])
+    events.push({
+      name: datum['staffName'] + ": " + datum['title'],
+      start: mStartTime.toDate(),
+      end: mEndTime.toDate(),
+      staffName: datum['staffName'],
+      managerName: datum['managerName'],
+      location: datum['managerName'],
+      description: datum['description'],
+      startTime: mStartTime.format("LLL"),
+      endTime: mEndTime.format("LLL"),
+      duration: Math.abs(mStartTime.diff(mEndTime, 'hours')),
+      createdTime: mCreatedTime.format("LLL"),
+      id: datum['id'],
+      status: datum['statusStr'],
+      color: colors[datum['id'] % colors.length],
+      timed: true,
+    })
+  }
+  return events
+}
 export default {
-  components: {FreeTimeDialog},
-
+  components: {
+    FreeTimeDialog,ShiftDetail
+  },
   data: () => ({
     //free-time
-    startDate: moment().format("YYYY-MM-DD"),
-    endDate: moment().format("YYYY-MM-DD"),
-    startTime: moment().format("HH:mm"),
-    endTime: moment().format("HH:mm"),
-    timePickerMenu: false,
-    startTimeMenu: false,
-    endTimeMenu: false,
-    startDateMenu: false,
-    endDateMenu: false,
-    dialog: false,
     freeTime: [],
     // end
     // current time line
@@ -94,15 +121,12 @@ export default {
     mode: "stack",
     weekday: [1, 2, 3, 4, 5, 6, 0],
     value: "",
-    colors: [
-      "blue",
-      "indigo",
-      "deep-purple",
-      "cyan",
-      "green",
-      "orange",
-      "grey darken-1",
-    ],
+    events: [],
+    // selected action data
+    valid: true,
+    selectedEvent: {},
+    selectedElement: null,
+    selectedOpen: false,
   }),
 
   mounted() {
@@ -128,6 +152,11 @@ export default {
         this.freeTime = tmp
         console.log(res)
       })
+    } else {
+      getShiftList().then(resp => {
+        const data = resp.data
+        this.events = shiftListToEvents(data)
+      })
     }
   },
   computed: {
@@ -142,27 +171,10 @@ export default {
     ...mapState({
       id: state => state.user.id
     }),
-
     ...mapGetters([
       'isManager',
     ]),
-    events() {
-      return [
-        //     {
-        //   name: "My free time",
-        //   start: moment().toDate(),
-        //   end: moment().add(7, "days").toDate(),
-        //   color: "green",
-        //   timed: true,
-        // }, {
-        //   name: "My free tim2e",
-        //   start: moment().toDate(),
-        //   end: moment().add(7, "days").toDate(),
-        //   color: "green",
-        //   timed: true,
-        // }
-      ]
-    },
+
   },
   methods: {
     viewDay({date}) {
@@ -187,34 +199,8 @@ export default {
       }
       return {backgroundColor: undefined}
 
-
     },
     getEvents() {
-      //start, end
-      // const events = [];
-      // console.log({start})
-      // const min = new Date(`${start.date}T00:00:00`);
-      // const max = new Date(`${end.date}T23:59:59`);
-      // const days = (max.getTime() - min.getTime()) / 86400000;
-      // const eventCount = this.rnd(days, days + 20);
-      //
-      // for (let i = 0; i < eventCount; i++) {
-      //   const allDay = this.rnd(0, 3) === 0;
-      //   const firstTimestamp = this.rnd(min.getTime(), max.getTime());
-      //   const first = new Date(firstTimestamp - (firstTimestamp % 900000));
-      //   const secondTimestamp = this.rnd(2, allDay ? 288 : 8) * 900000;
-      //   const second = new Date(first.getTime() + secondTimestamp);
-      //
-      //   events.push({
-      //     name: this.names[this.rnd(0, this.names.length - 1)],
-      //     start: first,
-      //     end: second,
-      //     color: this.colors[this.rnd(0, this.colors.length - 1)],
-      //     timed: !allDay,
-      //   });
-      // }
-      //
-      // this.events = events;
     },
     getEventColor(event) {
       return event.color;
@@ -235,7 +221,26 @@ export default {
     updateTime() {
       setInterval(() => this.cal.updateTimes(), 60 * 1000)
     },
-    //end
+    //select event
+    showEvent({nativeEvent, event}) {
+      const open = () => {
+        this.selectedEvent = event
+        this.selectedElement = nativeEvent.target
+        setTimeout(() => {
+          this.selectedOpen = true
+        }, 10)
+      }
+
+      if (this.selectedOpen) {
+        this.selectedOpen = false
+        setTimeout(open, 10)
+      } else {
+        open()
+      }
+
+      nativeEvent.stopPropagation()
+    },
+
   },
 };
 </script>
@@ -261,3 +266,4 @@ export default {
   }
 }
 </style>
+
