@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div style="display:flex;justify-content:space-around;margin-top:100px">
+    <div style="display:flex;justify-content:space-around;margin-top:200px">
 <!--      <el-card class="box-card" style="width:400px">-->
 <!--        <div slot="header" class="clearfix">-->
 <!--          <span>{{ name_ }}</span>-->
@@ -142,6 +142,10 @@ export default {
         workingLimit: this.workingLimit,
         address: this.address,
       }
+      //hide button
+      this.show=!this.show;
+      this.disabled = true;
+      alert("Update successful!");
 
       updateStaffInfo(param).then(resp => {
         console.log(resp);
