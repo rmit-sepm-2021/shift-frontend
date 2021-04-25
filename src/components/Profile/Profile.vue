@@ -42,7 +42,7 @@
 
 <script>
 import {mapState} from "vuex"
-import {getStaffInfo, updateStaffInfo} from "@/api/login"
+import {getStaffInfo, updateStaffInfo} from "@/api/staff"
 
 export default {
   name: "profile",

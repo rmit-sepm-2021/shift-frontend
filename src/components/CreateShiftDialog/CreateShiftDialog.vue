@@ -125,13 +125,6 @@
                           :items="locations"
                           :value="location"
                       ></v-combobox>
-                      <!--                      <v-text-field-->
-                      <!--                          prepend-icon="mdi-map-marker"-->
-                      <!--                        -->
-                      <!--                          type="Long"-->
-                      <!--                        -->
-                      <!--                          required-->
-                      <!--                      ></v-text-field>-->
                     </v-col>
 
                     <v-col
@@ -184,7 +177,7 @@
 </template>
 
 <script>
-import {createShift} from "@/api/login"
+import {createShift} from "@/api/shift"
 import {mapState} from 'vuex'
 import {getLocationList} from "@/api/location";
 

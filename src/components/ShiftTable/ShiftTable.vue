@@ -27,7 +27,7 @@
 <script>
 import {getShiftList} from "@/api/shift";
 import CreateShift from "@/components/CreateShiftDialog/CreateShiftDialog";
-import {deleteShift} from "@/api/login";
+import {deleteShift} from "@/api/shift";
 
 // import {firstWordUpperCase} from "@/utils/str";
 
