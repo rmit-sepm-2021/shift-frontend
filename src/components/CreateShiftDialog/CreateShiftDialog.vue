@@ -10,12 +10,11 @@
           >
             <template v-slot:activator="{ on, attrs }">
               <v-btn
-                  color="primary"
+                  :color="btnColor"
                   dark
                   v-bind="attrs"
                   v-on="on"
-                  fixed
-                  bottom
+                  :text="text"
               >
                 Add New Shift
               </v-btn>
@@ -117,14 +116,22 @@
 
                     </v-col>
                     <v-col cols="12">
-                      <v-text-field
-                          prepend-icon="mdi-map-marker"
+                      <v-combobox
                           v-model="location"
-                          type="Long"
-                          label="location"
+                          clearable
+                          hide-selected
                           :rules="FieldRequiredRule"
-                          required
-                      ></v-text-field>
+                          label="location"
+                          :items="locations"
+                          :value="location"
+                      ></v-combobox>
+                      <!--                      <v-text-field-->
+                      <!--                          prepend-icon="mdi-map-marker"-->
+                      <!--                        -->
+                      <!--                          type="Long"-->
+                      <!--                        -->
+                      <!--                          required-->
+                      <!--                      ></v-text-field>-->
                     </v-col>
 
                     <v-col
@@ -140,7 +147,6 @@
                     </v-col>
                   </v-row>
                 </v-container>
-                <small>*indicates required field</small>
               </v-card-text>
               <v-card-actions>
                 <v-spacer></v-spacer>
@@ -180,12 +186,22 @@
 <script>
 import {createShift} from "@/api/login"
 import {mapState} from 'vuex'
+import {getLocationList} from "@/api/location";
 
 let moment = require('moment');
 
 export default {
   name: "CreateShift",
-
+  props: {
+    text: Boolean,
+    btnColor: String,
+  },
+  mounted() {
+    getLocationList().then(resp => {
+      const data = resp.data
+      this.locations = data.map(item => item['name'])
+    })
+  },
   data: () => ({
     dialog: false,
     formTitle: "New Shift Detail",
@@ -194,13 +210,13 @@ export default {
     startTimeMenu: false,
     startDateMenu: false,
     location: "",
+    locations: [],
     title: "A title",
     duration: 4,
     description: "no 996",
     valid: true,
     TimeRules: [
       v => !!v || 'Time is required',
-
     ],
 
     FieldRequiredRule: [
@@ -222,26 +238,34 @@ export default {
       if (!confirm("Are you sure you want to add this shift?")) {
         return;
       }
-      if (isValid) {
-        const {
-          id,
-          title,
-          description
-        } = this
-        const createdTime = new Date().valueOf()
-        const startTime = moment(this.startDate + " " + this.startTime).valueOf()
-        const createShiftParams = {
-          startTime, createdTime, status: 0, title, description, creatorId: id
-        }
-        createShift(createShiftParams).then((res) => {
-          if (res.code === 200) {
-            alert("Shift successfully added")
-          }
-          this.dialog = false
-          window.location.reload()
-        })
 
+      if (!isValid) {
+        alert("Please fill required fields.")
+        return;
       }
+      const {
+        id,
+        title,
+        description, location
+      } = this
+
+      // return;
+      const createdTime = new Date().valueOf()
+      const startTime = moment(this.startDate + " " + this.startTime).valueOf()
+      const endTime = moment(startTime).add(this.duration, 'hour')
+      const createShiftParams = {
+        startTime, createdTime, title, description, managerId: id
+        , location, endTime
+      }
+      createShift(createShiftParams).then((res) => {
+        if (res.code === 200) {
+          alert("Shift successfully added")
+        }
+        this.dialog = false
+        window.location.reload()
+      })
+
+
       this.$refs.form.resetValidation()
     },
 

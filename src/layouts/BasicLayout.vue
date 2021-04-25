@@ -15,16 +15,21 @@
         </v-sheet>
         <v-divider></v-divider>
         <v-list>
-          <v-list-item v-if="isManager" @click="switchToStaff">
-            <v-list-item-content>
-              <v-list-item-title>Switch to Staff</v-list-item-title>
-            </v-list-item-content>
-          </v-list-item>
-          <v-list-item v-else @click="switchToManager">
-            <v-list-item-content>
-              <v-list-item-title>Switch to Manager</v-list-item-title>
-            </v-list-item-content>
-          </v-list-item>
+          <template v-if="isManager">
+            <v-list-item @click="switchToStaff">
+              <v-list-item-content>
+                <v-list-item-title>Switch to Staff</v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
+          </template>
+          <template v-else>
+            <v-list-item @click="switchToManager">
+              <v-list-item-content>
+                <v-list-item-title>Switch to Manager</v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
+          </template>
+
           <v-list-item v-for="[icon, text,path] in SideBarLink" :key="text" link :to="path">
             <!--            TODO Add icon-->
             <v-list-item-icon>
@@ -48,9 +53,10 @@
 import {mapActions, mapGetters, mapState} from 'vuex'
 import auth from "@/utils/auth";
 
+
 export default {
   name: "BasicLayout",
-
+  components: {},
   created() {
     const {Login} = this
     const loginParams = {
@@ -96,7 +102,7 @@ export default {
         return [
           ["fa-tachometer-alt", "Dashboard", "/dashboard"],
           ["mdi-bell", "Notification", "/staff/notification"],
-          ["mdi-account", "Profile", "/staff/profile"],
+          ["mdi-account", "Profile", "/profile"],
           ["mdi-timetable", "My Shift", "/staff/shifts"],
 
         ]
@@ -104,10 +110,9 @@ export default {
         return [
           ["fa-tachometer-alt", "Dashboard", "/dashboard"],
           ["mdi-bell", "Notification", "/manager/notification"],
-          ["mdi-account", "Profile", "/manager/profile"],
+          // ["mdi-account", "Profile", "/manager/profile"],
           ["mdi-account-box-multiple", "Account List", "/manager/accounts"],
           ["mdi-timetable", "Shift List", "/manager/shifts"],
-          ["mdi-send", "CreateShift", "/createShift"],
         ]
       }
     },
@@ -128,6 +133,7 @@ export default {
         console.log(res)
         const data = res['data']
         auth.setToken(data['token'])
+        this.$router.push('/')
         window.location.reload()
       })
     },
@@ -140,6 +146,7 @@ export default {
         console.log(res)
         const data = res['data']
         auth.setToken(data['token'])
+        this.$router.push('/')
         window.location.reload()
       })
     },

@@ -11,28 +11,11 @@ const userApi = {
     // get my info
     UserInfo: '/user/info',
     UserMenu: '/user/nav',
-    //get shift id
-    ShiftId:'/shift/{id}',
-    // add new shift
-    CreateShift: '/shift'
+
 }
 
 export async function login(loginParam) {
     return request.post(userApi.Login, loginParam)
 }
 
-export async function deleteShift(id) {
-    return request.delete_('/shift/'+id)
-}
 
-
-export async function createShift(param) {
-    return request.post(userApi.CreateShift, param)
-}
-export async function getStaffInfo(id) {
-    return request.get('/staff/'+id)
-}
-
-export async function updateStaffInfo(param) {
-    return request.put('/staff/update',param)
-}

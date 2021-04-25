@@ -1,34 +1,7 @@
 <template>
   <div>
     <div style="display:flex;justify-content:space-around;margin-top:200px">
-<!--      <el-card class="box-card" style="width:400px">-->
-<!--        <div slot="header" class="clearfix">-->
-<!--          <span>{{ name_ }}</span>-->
 
-<!--        </div>-->
-<!--        <div>-->
-<!--          <div>email:-->
-<!--            <el-tag>{{ email }}</el-tag>-->
-<!--          </div>-->
-<!--          <div>phone:-->
-<!--            <el-tag>{{ phone }}</el-tag>-->
-<!--          </div>-->
-
-<!--          <div>workingLimit:-->
-<!--            <el-tag>{{ workingLimit }}</el-tag>-->
-<!--          </div>-->
-<!--          <div>address:-->
-<!--            <el-tag>{{ address }}</el-tag>-->
-<!--          </div>-->
-<!--        </div>-->
-<!--        <div style="display:flex;justify-content:space-around;margin-top:10px">-->
-<!--          <el-button type="primary" @click="showUpdateUserInformationOfView">change information</el-button>-->
-<!--        </div>-->
-<!--      </el-card>-->
-      <!-- <el-dialog
-        title="info"
-        :visible.sync="dialogVisible"
-        width="70%"> -->
       <el-card class="box-card" style="width:400px"
                :visible.sync="dialogVisible">
         <div slot="header" class="clearfix">
@@ -44,67 +17,38 @@
           </div>
 
           <div>Working Limit:
-            <el-input v-model="workingLimit" :disabled="disabled"></el-input>
+            <el-input v-model="workingLimit" disabled></el-input>
           </div>
           <div>Address:
             <el-input v-model="address" :disabled="disabled"></el-input>
+          </div>
+          <div>Preferred name:
+            <el-input v-model="preferredName" :disabled="disabled"></el-input>
           </div>
         </div>
         <div style="display:flex;justify-content:space-around;margin-top:10px">
         <span slot="footer" class="dialog-footer">
           <el-button type="primary" @click="showUpdateUserInformationOfView" v-if="!show">Edit Profile</el-button>
-          <el-button @click="disshowUpdateUserInformationOfView" v-if="show" >Cancel</el-button>
+          <el-button @click="disshowUpdateUserInformationOfView" v-if="show">Cancel</el-button>
           <el-button type="primary" @click="updateUserInformationOfView" v-if="show">Update</el-button>
         </span>
 
         </div>
 
       </el-card>
-      <!-- <div>
-        <table>
-          <tr>
-            <td>name:</td>
-            <td><el-input v-model="name_"></el-input></td>
-          </tr>
-          <tr>
-            <td>email:</td>
-            <td><el-input v-model="email"></el-input></td>
-          </tr>
-          <tr>
-            <td>phone:</td>
-            <td><el-input v-model="phone"></el-input></td>
-          </tr>
-
-          <tr>
-            <td>workingLimit:</td>
-            <td><el-input v-model="workingLimit" ></el-input></td>
-          </tr>
-          <tr>
-            <td>address:</td>
-            <td><el-input v-model="address" ></el-input></td>
-          </tr>
-        </table>
-
-      </div> -->
-      <!-- <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogVisible = false">cancle</el-button>
-        <el-button type="primary" @click="updateUserInformationOfView">update</el-button>
-      </span> -->
-      <!-- </el-dialog> -->
     </div>
   </div>
 </template>
 
 <script>
 import {mapState} from "vuex"
-import {getStaffInfo} from "@/api/login"
-import {updateStaffInfo} from "@/api/login"
+import {getStaffInfo, updateStaffInfo} from "@/api/login"
 
 export default {
   name: "profile",
   data() {
     return {
-      show:false,
+      show: false,
 
       disabled: true,
 
@@ -115,7 +59,8 @@ export default {
       phone: "",
       workingLimit: 0,
       address: "",
-      dialogVisible: false
+      dialogVisible: false,
+      preferredName: ""
     }
   },
   mounted() {
@@ -124,11 +69,6 @@ export default {
   computed: {
     ...mapState({
       id: state => state.user.id,
-      // name_: state => state.user.name,
-      // email: state => state.user.email,
-      // phone: state => state.user.phone,
-      // workingLimit: state => state.user.workingLimit,
-      // address: state => state.user.address,
     }),
   },
   methods: {
@@ -143,16 +83,14 @@ export default {
         address: this.address,
       }
       //hide button
-      this.show=!this.show;
+      this.show = !this.show;
       this.disabled = true;
       alert("Update successful!");
 
       updateStaffInfo(param).then(resp => {
         console.log(resp);
-
         if (resp) {
           this.dialogVisible = false;
-
           // this.initUser();
         }
       })
@@ -160,13 +98,13 @@ export default {
     showUpdateUserInformationOfView() {
       // this.dialogVisible=true;
       this.disabled = false;
-      this.show=!this.show;
+      this.show = !this.show;
 
     },
     disshowUpdateUserInformationOfView() {
       this.dialogVisible = false;
       this.disabled = true;
-      this.show=!this.show;
+      this.show = !this.show;
 
     },
     initUser() {
@@ -181,7 +119,7 @@ export default {
           this.address = data.address;
           // this.user = resp;
           this.data = Object.assign({}, this.data);
-
+          this.preferredName = data.preferredName
         }
 
       })

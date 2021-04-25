@@ -2,6 +2,13 @@
   <div>
 
     <v-sheet tile height="54" class="d-flex">
+      <template v-if="!isManager">
+        <FreeTimeDialog  class="ma-2"></FreeTimeDialog>
+      </template>
+      <template v-else >
+        <CreateShift btn-color="primary" class="ma-2"></CreateShift>
+      </template>
+      <v-spacer></v-spacer>
       <v-btn icon class="ma-2" @click="$refs.calendar.prev()">
         <v-icon>mdi-chevron-left</v-icon>
       </v-btn>
@@ -19,17 +26,17 @@
       ></v-select>
       <v-btn
           outlined
-          class="mr-4"
+          class="ma-2"
           color="grey darken-2"
           @click="setToday"
       >
         Today
       </v-btn>
-      <v-toolbar-title v-if="$refs.calendar">
+      <v-toolbar-title   class="ma-2" v-if="$refs.calendar">
         {{ $refs.calendar.title }}
       </v-toolbar-title>
-      <v-spacer></v-spacer>
-      <FreeTimeDialog v-if="!isManager"></FreeTimeDialog>
+
+
 
     </v-sheet>
     <v-sheet height="600">
@@ -60,7 +67,10 @@
         </template>
       </v-calendar>
     </v-sheet>
-    <ShiftDetail :selected-event="selectedEvent"  :selected-element="selectedElement"></ShiftDetail>
+    <ShiftDetail :selected-element="selectedElement"
+                 :selected-event="selectedEvent"
+    ></ShiftDetail>
+
   </div>
 </template>
 
@@ -70,6 +80,8 @@ import {mapGetters, mapState} from "vuex";
 import {getFreeTime} from "@/api/availableTime"
 import {getShiftList} from "@/api/shift";
 import ShiftDetail from "@/components/Calendar/ShiftDetail";
+import CreateShift from "@/components/CreateShiftDialog/CreateShiftDialog";
+
 let moment = require('moment');
 const colors = [
   "blue",
@@ -107,7 +119,7 @@ const shiftListToEvents = (list) => {
 }
 export default {
   components: {
-    FreeTimeDialog,ShiftDetail
+    FreeTimeDialog, ShiftDetail, CreateShift
   },
   data: () => ({
     //free-time
@@ -123,10 +135,8 @@ export default {
     value: "",
     events: [],
     // selected action data
-    valid: true,
     selectedEvent: {},
     selectedElement: null,
-    selectedOpen: false,
   }),
 
   mounted() {
@@ -150,7 +160,7 @@ export default {
 
         }
         this.freeTime = tmp
-        console.log(res)
+
       })
     } else {
       getShiftList().then(resp => {
@@ -161,10 +171,10 @@ export default {
   },
   computed: {
     // current time
-    nowY () {
+    nowY() {
       return this.cal ? this.cal.timeToY(this.cal.times.now) + 'px' : '-10px'
     },
-    cal () {
+    cal() {
       return this.ready ? this.$refs.calendar : null
     },
     // end
@@ -185,13 +195,10 @@ export default {
       this.value = ''
     },
     intervalStyle(interval) {
-      // console.log(interval)
+
       const mInterval = moment(interval.date + " " + interval.time)
       for (const time of this.freeTime) {
         if (mInterval.isBetween(time.startTime, time.endTime, null, '[]')) {
-          // console.log(mInterval.format())
-          // console.log(time.startTime.format())
-          // console.log(time.endTime.format())
           return {
             backgroundColor: '#99FFCC'
           }
@@ -223,24 +230,21 @@ export default {
     },
     //select event
     showEvent({nativeEvent, event}) {
-      const open = () => {
-        this.selectedEvent = event
-        this.selectedElement = nativeEvent.target
-        setTimeout(() => {
-          this.selectedOpen = true
-        }, 10)
-      }
-
-      if (this.selectedOpen) {
-        this.selectedOpen = false
-        setTimeout(open, 10)
-      } else {
-        open()
-      }
-
+      // const open = () => {
+      //   this.selectedEvent = event
+      //   this.selectedElement = nativeEvent.target
+      // }
+      //
+      // if (this.selectedOpen) {
+      //   this.selectedOpen = false
+      //   setTimeout(open, 10)
+      // } else {
+      //   open()
+      // }
+      this.selectedEvent = event
+      this.selectedElement = nativeEvent.target
       nativeEvent.stopPropagation()
     },
-
   },
 };
 </script>

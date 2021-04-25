@@ -1,4 +1,5 @@
 <template>
+
   <v-menu
       v-model="selectedOpen"
       :close-on-content-click="false"
@@ -14,17 +15,16 @@
           :color="selectedEvent.color"
           dark
       >
-        <v-btn icon>
-          <v-icon>mdi-pencil</v-icon>
-        </v-btn>
         <v-toolbar-title v-html="selectedEvent.name"></v-toolbar-title>
+
         <v-spacer></v-spacer>
-        <v-btn icon>
-          <v-icon>fa-plus-circle</v-icon>
-        </v-btn>
-        <v-btn icon>
-          <v-icon>mdi-dots-vertical</v-icon>
-        </v-btn>
+        <template v-if="selectedEvent.status==='Not allocated'">
+          <span>Allocate a staff</span>
+          <v-btn icon>
+            <v-icon>fa-plus-circle</v-icon>
+          </v-btn>
+        </template>
+
       </v-toolbar>
       <v-card-text>
         <v-form
@@ -33,8 +33,6 @@
             lazy-validation
             disabled
         >
-
-
           <v-text-field
               v-model.trim="selectedEvent.staffName"
               label="Staff Name"
@@ -112,10 +110,10 @@
         >
           Ok
         </v-btn>
-
       </v-card-actions>
     </v-card>
   </v-menu>
+
 </template>
 
 <script>
@@ -124,12 +122,17 @@ export default {
   props: {
     // selected action data
     selectedEvent: Object,
+    // selectedOpen: Boolean,
     selectedElement: null,
+
   },
   data: () => ({
     valid: true,
+    // selectedOpenn: this.selectedOpen,
     selectedOpen: false,
-  })
+  }),
+  methods: {}
+
 //  todo add more actions like change shift
 }
 </script>
