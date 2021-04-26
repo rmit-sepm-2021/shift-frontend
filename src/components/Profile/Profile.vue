@@ -75,12 +75,13 @@ export default {
     updateUserInformationOfView() {
       console.log(this.id);
       const param = {
-        name_: this.name,
+        name: this.name,
         id: this.id,
         email: this.email,
         phone: this.phone,
         workingLimit: this.workingLimit,
         address: this.address,
+        preferredName: this.preferredName
       }
       //hide button
       this.show = !this.show;

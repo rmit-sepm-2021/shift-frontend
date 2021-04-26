@@ -91,11 +91,13 @@
                               prepend-icon="mdi-calendar"
                               v-bind="attrs"
                               v-on="on"
+
                           ></v-text-field>
                         </template>
                         <v-date-picker
                             v-model="startDate"
                             @input="startDateMenu = false"
+                            :allowed-dates="allowedStartDates"
                         ></v-date-picker>
                       </v-menu>
 
@@ -190,6 +192,7 @@ export default {
     btnColor: String,
   },
   mounted() {
+
     getLocationList().then(resp => {
       const data = resp.data
       this.locations = data.map(item => item['name'])
@@ -197,7 +200,7 @@ export default {
   },
   data: () => ({
     dialog: false,
-    formTitle: "New Shift Detail",
+    formTitle: "New Shift",
     startTime: moment().format("HH:mm"),
     startDate: moment().format("YYYY-MM-DD"),
     startTimeMenu: false,
@@ -225,12 +228,14 @@ export default {
   },
 
   methods: {
-
+    allowedStartDates(date) {
+      const mDate = moment(date, "YYYY-MM-DD")
+      const date2w = moment().add(2, 'week')
+      return mDate.isBetween(moment(), date2w, null, '[]') || mDate.isSame(moment())
+    },
     add() {
       const isValid = this.$refs.form.validate()
-      if (!confirm("Are you sure you want to add this shift?")) {
-        return;
-      }
+
 
       if (!isValid) {
         alert("Please fill required fields.")

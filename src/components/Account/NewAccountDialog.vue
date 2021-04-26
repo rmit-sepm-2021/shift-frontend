@@ -172,9 +172,7 @@ export default {
 
     save() {
       const isValid = this.$refs.form.validate()
-      if (!confirm("Are you sure you want to create this account?")) {
-        return;
-      }
+
       if (isValid) {
         const {
           name,

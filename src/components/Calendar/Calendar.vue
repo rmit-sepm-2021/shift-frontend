@@ -3,9 +3,9 @@
 
     <v-sheet tile height="54" class="d-flex">
       <template v-if="!isManager">
-        <FreeTimeDialog  class="ma-2"></FreeTimeDialog>
+        <FreeTimeDialog class="ma-2"></FreeTimeDialog>
       </template>
-      <template v-else >
+      <template v-else>
         <CreateShift btn-color="primary" class="ma-2"></CreateShift>
       </template>
       <v-spacer></v-spacer>
@@ -32,14 +32,13 @@
       >
         Today
       </v-btn>
-      <v-toolbar-title   class="ma-2" v-if="$refs.calendar">
+      <v-toolbar-title class="ma-2" v-if="$refs.calendar">
         {{ $refs.calendar.title }}
       </v-toolbar-title>
 
 
-
     </v-sheet>
-    <v-sheet height="600">
+    <v-sheet height="700">
 
       <v-calendar
           :interval-style="intervalStyle"
@@ -97,8 +96,9 @@ const shiftListToEvents = (list) => {
   for (const datum of list) {
     const mStartTime = moment(datum['startTime']), mEndTime = moment(datum['endTime']),
         mCreatedTime = moment(datum['createdTime'])
+
     events.push({
-      name: datum['staffName'] + ": " + datum['title'],
+      name: datum['staffName'] ? datum['staffName'] + ": " + datum['title'] : datum['title'],
       start: mStartTime.toDate(),
       end: mEndTime.toDate(),
       staffName: datum['staffName'],
