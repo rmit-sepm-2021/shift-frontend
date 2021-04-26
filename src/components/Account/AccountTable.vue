@@ -25,7 +25,7 @@
     </v-sheet>
     <el-dialog :title="form.title" :visible.sync="dialogFormVisible">
       <el-form :model="form">
-        <el-form-item label="New working limit">
+        <el-form-item label="New working limit (hours)">
           <el-input v-model="form.workingLimit" autocomplete="off"></el-input>
         </el-form-item>
 
@@ -119,7 +119,6 @@ export default {
     changeWorkingLimitAction(item) {
       //item
       this.dialogFormVisible = true
-
       this.form.id = item['_id']
       this.form.title = `Change ${item['name']}'s working limit`
       this.form.workingLimit = item['workingLimit']
@@ -129,9 +128,17 @@ export default {
         return
       }
       const param = {staffId: this.form.id, workingLimit: this.form.workingLimit}
-
-      updateWorkingLimit(param).then(() => {
+      if (this.form.workingLimit > 120) {
+        alert("Please input a valid working limit")
+        return;
+      }
+      updateWorkingLimit(param).then((resp) => {
+        if (resp.code !== 200) {
+          alert("Current workload hours is greater than new working limit. Update failed!")
+          return
+        }
         alert("Change successfully")
+
         for (const item of this.accounts) {
           if (item['_id'] === this.form.id && item['role'] === 'Staff') {
             item['workingLimit'] = this.form.workingLimit
