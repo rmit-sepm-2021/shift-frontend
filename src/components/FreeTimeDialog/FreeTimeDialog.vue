@@ -11,12 +11,12 @@
           v-bind="attrs"
           v-on="on"
       >
-        Select a free time
+        Select an available time
       </v-btn>
-    </template>
+     </template>
     <v-card>
       <v-card-title>
-        <span class="headline">Select a free time</span>
+        <span class="headline">Select an available time</span>
       </v-card-title>
       <v-card-text>
         <v-container>
@@ -113,6 +113,7 @@
             </v-col>
           </v-row>
         </v-container>
+        <small>Available time will be indicated in the calendar by green color</small>
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
@@ -193,7 +194,7 @@ export default {
 
       postFreeTime(param).then((res) => {
         if (res.code === 500) {
-          alert("Add Free time failed. Time may be overlap")
+          alert("Add available time failed. Time may be overlap")
         } else {
           window.location.reload()
         }
