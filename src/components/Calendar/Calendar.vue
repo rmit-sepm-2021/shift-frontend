@@ -1,8 +1,7 @@
 <template>
-  <div>
+  <div class="pa-5">
 
     <v-sheet tile height="54" class="d-flex">
-
       <template v-if="!isManager">
         <FreeTimeDialog class="ma-2"></FreeTimeDialog>
       </template>

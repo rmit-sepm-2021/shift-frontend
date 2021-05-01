@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <v-sheet tile class="d-flex">
+  <div class="pa-5">
+    <v-sheet tile class="d-flex ">
 
       <NewAccountDialog></NewAccountDialog>
     </v-sheet>

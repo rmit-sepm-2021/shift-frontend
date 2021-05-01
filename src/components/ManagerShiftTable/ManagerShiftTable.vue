@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="pa-5">
     <v-sheet tile class="d-flex">
       <CreateShift btn-color="primary"></CreateShift>
     </v-sheet>
@@ -25,13 +25,13 @@
 </template>
 
 <script>
-import {getShiftList} from "@/api/shift";
+import {deleteShift, getShiftList} from "@/api/shift";
 import CreateShift from "@/components/CreateShiftDialog/CreateShiftDialog";
-import {deleteShift} from "@/api/shift";
 
 // import {firstWordUpperCase} from "@/utils/str";
+import {ShiftListToTableData} from "@/utils/shift"
 
-let moment = require('moment')
+
 
 const headers = [
   {
@@ -65,19 +65,13 @@ const headers = [
 ]
 
 export default {
-  name: "ShiftTable",
+  name: "ManagerShiftTable",
   components: {CreateShift},
   async mounted() {
     //load data
     getShiftList().then((resp) => {
       const data = resp.data
-      for (const datum of data) {
-        datum['createdTime'] = moment(datum['createdTime']).format("YYYY-MM-DD")
-        datum['startTime'] = moment(datum['startTime']).format("YYYY-MM-DD HH:mm")
-        datum['endTime'] = moment(datum['endTime']).format("YYYY-MM-DD HH:mm")
-        datum['status'] = datum['statusStr']
-      }
-      this.shiftListData = data
+      this.shiftListData = ShiftListToTableData(data)
     })
 
   },

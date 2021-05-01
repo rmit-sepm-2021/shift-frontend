@@ -19,6 +19,7 @@
             <v-list-item @click="switchToStaff">
               <v-list-item-content>
                 <v-list-item-title>Switch to Staff</v-list-item-title>
+
               </v-list-item-content>
             </v-list-item>
           </template>
@@ -33,7 +34,10 @@
           <v-list-item v-for="[icon, text,path] in SideBarLink" :key="text" link :to="path">
             <!--            TODO Add icon-->
             <v-list-item-icon>
-              <v-icon v-text="icon"></v-icon>
+              <v-badge color="red"  v-if="text==='Notification'" :content="ms"  :value="ms">
+                <v-icon v-text="icon"></v-icon>
+              </v-badge>
+              <v-icon v-text="icon" v-else></v-icon>
             </v-list-item-icon>
             <v-list-item-content>
               <v-list-item-title>{{ text }}</v-list-item-title>
@@ -41,9 +45,10 @@
           </v-list-item>
         </v-list>
       </v-navigation-drawer>
-      <v-container class="py-8 px-6" fluid>
-        <router-view/>
-      </v-container>
+      <!--      <v-container class="py-8 px-6" fluid>-->
+      <!--  -->
+      <!--      </v-container>-->
+      <router-view/>
     </v-main>
   </v-app>
 
@@ -101,15 +106,15 @@ export default {
       if (this.role === "STAFF") {
         return [
           ["fa-tachometer-alt", "Dashboard", "/dashboard"],
-          // ["mdi-bell", "Notification", "/staff/notification"],
+          ["mdi-bell", "Notification", "/notification"],
           ["mdi-account", "Profile", "/profile"],
-          // ["mdi-timetable", "My Shift", "/staff/shifts"],
+          ["mdi-timetable", "My Shift", "/staff/shifts"],
 
         ]
       } else {
         return [
           ["fa-tachometer-alt", "Dashboard", "/dashboard"],
-          // ["mdi-bell", "Notification", "/manager/notification"],
+          ["mdi-bell", "Notification", "/notification"],
           // ["mdi-account", "Profile", "/manager/profile"],
           ["mdi-account-box-multiple", "Account List", "/manager/accounts"],
           ["mdi-timetable", "Shift List", "/manager/shifts"],
@@ -120,6 +125,7 @@ export default {
   data: () => ({
     cards: ["Today", "Yesterday"],
     drawer: null,
+    ms:5,
   }),
   methods: {
     loginAsStaff() {

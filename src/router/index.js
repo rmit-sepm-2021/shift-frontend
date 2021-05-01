@@ -6,9 +6,10 @@ import AccountTable from "@/components/Account/AccountTable";
 import BasicLayout from "@/layouts/BasicLayout"
 
 import Profile from '../components/Profile/Profile'
-import ShiftTable from "@/components/ShiftTable/ShiftTable";
+import ShiftTable from "@/components/ManagerShiftTable/ManagerShiftTable";
 import CreateShift from "../components/CreateShiftDialog/CreateShiftDialog";
-
+import Notification from "@/components/Notification/Notification";
+import StaffShiftTable from "@/components/StaffShiftTable/StaffShiftTable";
 Vue.use(VueRouter)
 
 const routes = [
@@ -25,6 +26,14 @@ const routes = [
                 }
             },
             {
+                path: '/notification',
+                component: Notification,
+                meta: {
+                    title: 'Notification'
+                }
+            },
+
+            {
                 path: 'manager/accounts',
                 component: AccountTable,
                 meta: {
@@ -34,6 +43,13 @@ const routes = [
             {
                 path: 'manager/shifts',
                 component: ShiftTable,
+                meta: {
+                    title: 'Shifts'
+                }
+            },
+            {
+                path: 'staff/shifts',
+                component: StaffShiftTable,
                 meta: {
                     title: 'Shifts'
                 }
@@ -55,7 +71,6 @@ const routes = [
             title: 'Login'
         }
     },
-
 
 
     //addNewShift
