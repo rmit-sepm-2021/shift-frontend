@@ -3,7 +3,8 @@ import request from "@/utils/request";
 const api = {
     PostMessage: '/api/message',
     GetMessageListByStaffId: (id) => `/api/staff/${id}/message`,
-    GetMessageListByManagerId: (id) => `/api/manager/${id}/message`
+    GetMessageListByManagerId: (id) => `/api/manager/${id}/message`,
+    SetRead:'/api/message',
 }
 
 export async function postMessage(param) {
@@ -16,4 +17,7 @@ export async function getMessageListByStaffId(id) {
 
 export async function getMessageListByManagerId(id) {
     return request.get(api.GetMessageListByManagerId(id))
+}
+export async function setRead(param) {
+    return request.put(api.SetRead,param)
 }

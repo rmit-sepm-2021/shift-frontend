@@ -113,14 +113,14 @@
 import {generateMessageHtml} from "@/utils/message"
 import {getNameAbbr} from "@/utils/str"
 import {mapState} from "vuex";
-import {getMessageListByManagerId, getMessageListByStaffId} from "@/api/message";
+import {getMessageListByManagerId, getMessageListByStaffId, setRead} from "@/api/message";
 
 let moment = require('moment');
 const toItem = (data) => {
-  let el=document.createElement('div')
+  let el = document.createElement('div')
 
   return data.map(i => {
-    el.innerHTML=i['content']
+    el.innerHTML = i['content']
     console.log()
 
 
@@ -135,11 +135,12 @@ const toItem = (data) => {
     return {
       createdTime: i['createdTime'],
       title,
-      subtitle:el.textContent ,
+      subtitle: el.textContent,
       sender: i['sender']['name'],
       receiver: i['receiver']['name'],
       isRead: i['isRead'],
-      content: i['content']
+      content: i['content'],
+      id: i['id'],
     }
 
 
@@ -184,6 +185,14 @@ export default {
     moment,
     handleSelectItem(item) {
       console.log(item)
+
+      const param = {
+        messageId: item['id']
+      }
+      if (!item['isRead']) {
+        item['isRead'] = true
+        setRead(param)
+      }
 
       this.selectedItem = item
     }

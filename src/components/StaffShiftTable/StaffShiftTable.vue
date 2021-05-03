@@ -25,18 +25,47 @@
               </v-icon>
             </template>
           </v-tooltip>
-          <v-tooltip bottom>
-            <span>Reject your allocation</span>
-            <template v-slot:activator="{ on, attrs }">
-              <v-icon
-                  @click="handleReject(item)"
-                  v-bind="attrs"
-                  v-on="on"
-              >
-                fa-times
-              </v-icon>
+          <v-dialog
+              v-model="dialog"
+              width="500"
+          >
+<!--            todo youhave new message in dashborad-->
+
+            <template v-slot:activator="{ on:dialog, attrs }">
+              <v-tooltip bottom>
+                <span>Reject your allocation</span>
+                <template v-slot:activator="{ on:tooltip }">
+                  <v-icon
+
+                      v-bind="attrs"
+                      v-on="{...tooltip,...dialog}"
+                  >
+                    fa-times
+                  </v-icon>
+                </template>
+              </v-tooltip>
             </template>
-          </v-tooltip>
+            <v-card>
+              <v-card-title class="headline  lighten-2">
+                Please input reject reason
+              </v-card-title>
+              <div class="pa-5">
+                <v-textarea outlined clearable label="Reason for rejection" :value="reason"></v-textarea>
+              </div>
+
+              <v-divider></v-divider>
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn
+                    color="primary"
+                    text
+                    @click="handleReject(item)"
+                >
+                  Save
+                </v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
         </template>
         <template v-slot:item.status="{ item }">
           <span class="red--text">{{ item.status }}
@@ -44,6 +73,7 @@
         </template>
       </v-data-table>
     </v-sheet>
+
   </div>
 
 </template>
@@ -55,7 +85,7 @@ import {acceptAllocation, getShiftListByStaffId, rejectAllocation} from "@/api/s
 import {ShiftListToTableData} from "@/utils/shift"
 import {postMessage} from "@/api/message";
 import {mapState} from "vuex";
-import {generateAcceptHtml} from "@/utils/message";
+import {generateAcceptHtml, generateRejectHtml} from "@/utils/message";
 
 const headers = [
   {
@@ -65,9 +95,7 @@ const headers = [
   {
     text: 'Manager', value: 'managerName'
   },
-  {
-    text: 'Created time', value: 'createdTime'
-  },
+
   {
     text: 'Start time', value: 'startTime'
   },
@@ -83,6 +111,9 @@ const headers = [
   {
     text: 'Status', value: 'status'
   },
+  {
+    text: 'Created time', value: 'createdTime'
+  },
   {text: 'Actions', value: 'actions', sortable: false},
 ]
 
@@ -97,7 +128,6 @@ export default {
     })
 
 
-
   },
   computed: {
     ...mapState({
@@ -106,13 +136,15 @@ export default {
   },
   data() {
     return {
+      reason: '',
       headers,
+      dialog: false,
       shiftListData: [],
     }
   },
   methods: {
-   async  handleAccept(item) {
-
+    async handleAccept(item) {
+      let failed = false
       console.log(item)
       if (!confirm("Are you sure you want to accept the allocation?")) {
         return
@@ -120,15 +152,17 @@ export default {
       const param = {
         id: item.id
       }
-    await   acceptAllocation(param).then(r => {
+      await acceptAllocation(param).then(r => {
         console.log(r)
         alert("Accept Successfully")
         item.status = "Allocated"
       }).catch(r => {
         console.log(r)
-
         alert("Something is wrong")
       })
+      if (failed) {
+        return
+      }
       const param2 =
           {
             "senderId": item.staffId,
@@ -137,7 +171,7 @@ export default {
             "type": 1,
             "senderRole": 0
           }
-     await  postMessage(param2).then(r => {
+      await postMessage(param2).then(r => {
         console.log(r)
       }).catch(r => {
         console.log(r)
@@ -154,12 +188,29 @@ export default {
         id: shiftId,
         reason
       }
-      rejectAllocation(param).then(r => {
-        console.log(r)
-      }).catch(r => {
-        console.log(r)
-        alert("Something is wrong")
-      })
+      if (!confirm("Are you sure you want to submit the reason fo rejection")){
+        return
+      }
+        rejectAllocation(param).then(r => {
+          console.log(r)
+          const param = {
+            "senderId": item.staffId,
+            "receiverId": item.managerId,
+            "content": generateRejectHtml(item, this.reason),
+            "type": 2,
+            "senderRole": 0
+          }
+          postMessage(param).then(r => {
+            console.log(r)
+          }).catch(r => {
+            console.log(r)
+          })
+          this.dialog = false
+        }).catch(r => {
+          console.log(r)
+          alert("Something is wrong")
+          this.dialog = false
+        })
     }
   }
 }

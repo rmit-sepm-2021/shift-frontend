@@ -35,3 +35,23 @@ export function generateAcceptHtml({staffName, managerName, title, description, 
  
 </div> `
 }
+
+export function generateRejectHtml({staffName, managerName, title, description, location, startTime, endTime},reason) {
+
+    return (
+        `<div class="text-justify">
+<p>Dear ${managerName},</p>
+<p>This is an automatic message. Staff ${staffName} has rejected an allocation. Here is the detail.</p>
+<p>Shift name: ${title}</p>
+<p>Start time: ${startTime}</p>
+<p>End time: ${endTime}</p>
+<p>Location: ${location}</p>
+<p>Description: </p>
+<p>${description}</p>
+<p>Reason: </p>
+<p>${reason}</p>
+<p>Kind regards,</p>
+<p>Staff ${staffName}.</p>
+ 
+</div> `)
+}
