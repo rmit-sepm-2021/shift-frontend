@@ -43,7 +43,23 @@
           </span>
         </template>
       </v-data-table>
+
+
+
     </v-sheet>
+    <p>History</p>
+    <v-data-table
+        :headers="aheader"
+        :items="shiftListData"
+        :items-per-page="20"
+        class="elevation-1"
+    >
+
+      <template v-slot:item.status="{ item }">
+          <span class="red--text">{{ item.status }}
+          </span>
+      </template>
+    </v-data-table>
   </div>
 
 </template>
@@ -86,6 +102,31 @@ const headers = [
   {text: 'Actions', value: 'actions', sortable: false},
 ]
 
+const aheader = [
+  {
+    text: 'Title', value: 'title'
+  },
+
+  {
+    text: 'Manager', value: 'managerName'
+  },
+  {
+    text: 'Created time', value: 'createdTime'
+  },
+  {
+    text: 'Start time', value: 'startTime'
+  },
+  {
+    text: 'End time', value: 'endTime'
+  },
+  {
+    text: 'Location', value: 'location'
+  },
+  {
+    text: 'Description', value: 'description'
+  },
+
+]
 export default {
   name: "ManagerShiftTable",
   async mounted() {
@@ -93,7 +134,16 @@ export default {
 
     getShiftListByStaffId(this.id).then((resp) => {
       const data = resp.data
+      const historyData=[]
       this.shiftListData = ShiftListToTableData(data)
+              for (const datum of data) {
+                if(datum.status==="Finished"){
+                  historyData.push(datum);
+                }
+              this.shiftListData2 = ShiftListToTableData(historyData)
+      }
+
+
     })
 
 
@@ -107,7 +157,9 @@ export default {
   data() {
     return {
       headers,
+      aheader,
       shiftListData: [],
+      shiftListData2: [],
     }
   },
   methods: {
