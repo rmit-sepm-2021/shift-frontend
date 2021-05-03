@@ -4,14 +4,18 @@
       max-width="500px"
   >
     <template v-slot:activator="{ on, attrs } ">
+
       <v-btn
-          color="primary"
-          dark
-          class="mb-2"
           v-bind="attrs"
           v-on="on"
+          color="primary"
       >
-        Create a new account
+        <v-icon
+            left
+        >
+          fa-plus
+        </v-icon>
+        Create an account
       </v-btn>
     </template>
     <v-card>

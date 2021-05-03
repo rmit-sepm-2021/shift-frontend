@@ -1,63 +1,63 @@
 <template>
-  <v-app app color="primary" dark>
-    <v-main>
-      <v-navigation-drawer v-model="drawer" app width="15%">
-        <v-sheet color="grey lighten-4" class="pa-4">
-          <router-link :to="{ name: 'profile'}">
-            <v-avatar class="mb-4" color="grey darken-1" size="64">
-              <span class="white--text headline">{{ nameAbbreviation }}</span>
-            </v-avatar>
-          </router-link>
+  <v-app app color="primary" class="app">
+    <v-navigation-drawer v-model="drawer" app width="15%">
+      <v-sheet color="grey lighten-4" class="pa-4">
+        <router-link :to="{ name: 'profile'}">
+          <v-avatar class="mb-4" color="grey darken-1" size="64">
+            <span class="white--text headline">{{ nameAbbreviation }}</span>
+          </v-avatar>
+        </router-link>
 
-          <div>{{ role }}</div>
-          <div>{{ name }}</div>
-          <div>{{ email }}</div>
-        </v-sheet>
-        <v-divider></v-divider>
-        <v-list>
-          <template v-if="isManager">
-            <v-list-item @click="switchToStaff">
-              <v-list-item-content>
-                <v-list-item-title>Switch to Staff</v-list-item-title>
-
-              </v-list-item-content>
-            </v-list-item>
-          </template>
-          <template v-else>
-            <v-list-item @click="switchToManager">
-              <v-list-item-content>
-                <v-list-item-title>Switch to Manager</v-list-item-title>
-              </v-list-item-content>
-            </v-list-item>
-          </template>
-
-          <v-list-item v-for="[icon, text,path] in SideBarLink" :key="text" link :to="path">
-
-            <v-list-item-icon>
-              <v-badge color="red" v-if="text==='Notification'&& notification.size!==0" :content="notification.size">
-                <v-icon v-text="icon"></v-icon>
-              </v-badge>
-              <v-icon v-text="icon" v-else></v-icon>
-            </v-list-item-icon>
+        <div>{{ role }}</div>
+        <div>{{ name }}</div>
+        <div>{{ email }}</div>
+      </v-sheet>
+      <v-divider></v-divider>
+      <v-list>
+        <template v-if="isManager">
+          <v-list-item @click="switchToStaff">
             <v-list-item-content>
-              <v-list-item-title>{{ text }}</v-list-item-title>
+              <v-list-item-title>Switch to Staff</v-list-item-title>
+
             </v-list-item-content>
           </v-list-item>
-        </v-list>
-      </v-navigation-drawer>
-      <div class="ma-5">
-        <v-alert
-            v-model="notification.alert"
-            dismissible
-            color="primary"
-            border="left"
-            elevation="2"
-            colored-border
-            icon="fa-bell"
-        >
-          You've got <strong v-text="notification.size"/> new notification<span v-if="notification.size>1">s</span>!
-        </v-alert>
-      </div>
+        </template>
+        <template v-else>
+          <v-list-item @click="switchToManager">
+            <v-list-item-content>
+              <v-list-item-title>Switch to Manager</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+        </template>
+
+        <v-list-item v-for="[icon, text,path] in SideBarLink" :key="text" link :to="path">
+
+          <v-list-item-icon>
+            <v-badge color="red" v-if="text==='Notification'&& notification.size!==0" :content="notification.size">
+              <v-icon v-text="icon"></v-icon>
+            </v-badge>
+            <v-icon v-text="icon" v-else></v-icon>
+          </v-list-item-icon>
+          <v-list-item-content>
+            <v-list-item-title>{{ text }}</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+      </v-list>
+    </v-navigation-drawer>
+    <div class="ma-5">
+      <v-alert
+          v-model="notification.alert"
+          dismissible
+          color="primary"
+          border="left"
+          elevation="2"
+          colored-border
+          icon="fa-bell"
+      >
+        You've got <strong v-text="notification.size"/> new notification<span v-if="notification.size>1">s</span>!
+      </v-alert>
+    </div>
+    <v-main class="app">
       <!--      Main component-->
       <router-view/>
     </v-main>
@@ -211,4 +211,9 @@ export default {
 </script>
 
 <style>
+.app {
+
+
+
+}
 </style>

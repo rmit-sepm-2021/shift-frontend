@@ -1,6 +1,5 @@
 <template>
-  <div class="pa-5">
-
+  <div class=" pa-3 ">
     <v-sheet tile height="54" class="d-flex">
       <template v-if="!isManager">
         <FreeTimeDialog class="ma-2"></FreeTimeDialog>
@@ -35,12 +34,10 @@
       <v-toolbar-title class="ma-2" v-if="$refs.calendar">
         {{ $refs.calendar.title }}
       </v-toolbar-title>
-
-
     </v-sheet>
-    <v-sheet >
-<!--height="700"-->
+    <v-sheet class="">
       <v-calendar
+          class="cal "
           :interval-style="intervalStyle"
           ref="calendar"
           v-model="value"
@@ -222,7 +219,6 @@ export default {
     scrollToTime() {
       const time = this.getCurrentTime()
       const first = Math.max(0, time - (time % 30) - 30)
-
       this.cal.scrollToTime(first)
     },
     updateTime() {
@@ -230,17 +226,6 @@ export default {
     },
     //select event
     showEvent({nativeEvent, event}) {
-      // const open = () => {
-      //   this.selectedEvent = event
-      //   this.selectedElement = nativeEvent.target
-      // }
-      //
-      // if (this.selectedOpen) {
-      //   this.selectedOpen = false
-      //   setTimeout(open, 10)
-      // } else {
-      //   open()
-      // }
       this.selectedEvent = event
       this.selectedElement = nativeEvent.target
       nativeEvent.stopPropagation()
@@ -268,6 +253,14 @@ export default {
     margin-top: -5px;
     margin-left: -6.5px;
   }
+}
+
+.cal {
+  //position: absolute;
+  //bottom: 0;
+  //right: 50px;
+  //left: 50px;
+
 }
 </style>
 

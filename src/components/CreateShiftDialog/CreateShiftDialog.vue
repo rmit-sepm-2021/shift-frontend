@@ -17,7 +17,13 @@
                   :text="text"
 
               >
-                Add New Shift
+                <v-icon
+                    left
+                >
+                  fa-plus
+                </v-icon>
+                 Add New Shift
+
               </v-btn>
             </template>
             <v-card>
