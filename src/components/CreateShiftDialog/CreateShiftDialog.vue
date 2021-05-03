@@ -15,6 +15,7 @@
                   v-bind="attrs"
                   v-on="on"
                   :text="text"
+
               >
                 Add New Shift
               </v-btn>

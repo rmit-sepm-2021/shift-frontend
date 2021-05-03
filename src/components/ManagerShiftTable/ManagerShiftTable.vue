@@ -83,8 +83,6 @@ export default {
   },
   methods: {
     deleteItem(item) {
-      console.log(item)
-      console.log(this.shiftListData.indexOf(item))
       if (!confirm("Are you sure you want to delete this shift?")) {
         return
       }

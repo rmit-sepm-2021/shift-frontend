@@ -203,16 +203,6 @@ export default {
 <style scoped>
 .inbox-div {
 
-  /*overflow-y: scroll;*/
-  /*display: inline-block;*/
-  /*!*position: fixed;*!*/
-  /*top: 23.2rem;*/
-  /*bottom: 0;*/
-  /*overflow: scroll;*/
-  /*right: 0;*/
-  /*width: 100%;*/
-  /*margin-bottom: 4.7rem;*/
-  /*z-index: 1;*/
   max-height: 700px;
 }
 </style>

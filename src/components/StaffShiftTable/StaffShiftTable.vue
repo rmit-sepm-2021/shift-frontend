@@ -182,7 +182,7 @@ export default {
 
 
     handleReject(item) {
-      console.log(item)
+
       let shiftId, reason;
       const param = {
         id: shiftId,

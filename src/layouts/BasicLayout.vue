@@ -32,9 +32,9 @@
           </template>
 
           <v-list-item v-for="[icon, text,path] in SideBarLink" :key="text" link :to="path">
-            <!--            TODO Add icon-->
+
             <v-list-item-icon>
-              <v-badge color="red"  v-if="text==='Notification'" :content="ms"  :value="ms">
+              <v-badge color="red" v-if="text==='Notification'&& notification.size!==0" :content="notification.size">
                 <v-icon v-text="icon"></v-icon>
               </v-badge>
               <v-icon v-text="icon" v-else></v-icon>
@@ -45,9 +45,20 @@
           </v-list-item>
         </v-list>
       </v-navigation-drawer>
-      <!--      <v-container class="py-8 px-6" fluid>-->
-      <!--  -->
-      <!--      </v-container>-->
+      <div class="ma-5">
+        <v-alert
+            v-model="notification.alert"
+            dismissible
+            color="primary"
+            border="left"
+            elevation="2"
+            colored-border
+            icon="fa-bell"
+        >
+          You've got <strong v-text="notification.size"/> new notification<span v-if="notification.size>1">s</span>!
+        </v-alert>
+      </div>
+      <!--      Main component-->
       <router-view/>
     </v-main>
   </v-app>
@@ -57,7 +68,8 @@
 <script>
 import {mapActions, mapGetters, mapState} from 'vuex'
 import auth from "@/utils/auth";
-
+import {getMessageListByManagerId, getMessageListByStaffId} from "@/api/message";
+import * as _ from 'lodash'
 
 export default {
   name: "BasicLayout",
@@ -72,15 +84,30 @@ export default {
     if (!auth.isLogged()) {
 
       Login(loginParams).then((res) => {
-
         console.log(res)
         const data = res['data']
         auth.setToken(data['token'])
       })
     }
-
+  },
+  mounted() {
+    // notification part
+    if (this.role === "STAFF") {
+      getMessageListByStaffId(this.id).then(r => {
+        const data = r.data
+        this.setUpNotification(data)
+      });
+    } else {
+      getMessageListByManagerId(this.id).then(r => {
+        const data = r.data
+        this.setUpNotification(data)
+      })
+    }
   },
   computed: {
+    ...mapState({
+      id: state => state.user.id,
+    }),
     isManager() {
       if (this.role === "STAFF") {
         return false;
@@ -102,7 +129,7 @@ export default {
       // ...
     ]),
     SideBarLink() {
-      console.log({role: this.role})
+
       if (this.role === "STAFF") {
         return [
           ["fa-tachometer-alt", "Dashboard", "/dashboard"],
@@ -125,9 +152,23 @@ export default {
   data: () => ({
     cards: ["Today", "Yesterday"],
     drawer: null,
-    ms:5,
+
+    notification: {
+      alert: false,
+      size: 0,
+    },
   }),
   methods: {
+    setUpNotification(data) {
+      const unreadData = _.filter(data, (item => {
+        return !item.isRead
+      }))
+      if (unreadData.length !== 0) {
+        this.notification.alert = true
+
+        this.notification.size = unreadData.length
+      }
+    },
     loginAsStaff() {
       const {Login} = this
       const loginParams = {

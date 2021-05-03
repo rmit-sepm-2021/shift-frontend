@@ -38,8 +38,8 @@
 
 
     </v-sheet>
-    <v-sheet height="700">
-
+    <v-sheet >
+<!--height="700"-->
       <v-calendar
           :interval-style="intervalStyle"
           ref="calendar"
