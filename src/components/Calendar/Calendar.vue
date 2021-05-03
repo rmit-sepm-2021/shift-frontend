@@ -1,80 +1,114 @@
 <template>
-  <div class=" pa-3 ">
-    <v-sheet tile height="54" class="d-flex">
-      <template v-if="!isManager">
-        <FreeTimeDialog class="ma-2"></FreeTimeDialog>
-      </template>
-      <template v-else>
-        <CreateShift btn-color="primary" class="ma-2"></CreateShift>
-      </template>
-      <v-spacer></v-spacer>
-      <v-btn icon class="ma-2" @click="$refs.calendar.prev()">
-        <v-icon>mdi-chevron-left</v-icon>
-      </v-btn>
-      <v-btn icon class="ma-2" @click="$refs.calendar.next()">
-        <v-icon>mdi-chevron-right</v-icon>
-      </v-btn>
-      <v-select
-          v-model="type"
-          :items="types"
-          dense
-          outlined
-          hide-details
-          class="ma-2"
-          label="type"
-      ></v-select>
-      <v-btn
-          outlined
-          class="ma-2"
-          color="grey darken-2"
-          @click="setToday"
-      >
-        Today
-      </v-btn>
-      <v-toolbar-title class="ma-2" v-if="$refs.calendar">
-        {{ $refs.calendar.title }}
-      </v-toolbar-title>
-    </v-sheet>
-    <v-sheet class="">
-      <v-calendar
-          class="cal "
-          :interval-style="intervalStyle"
-          ref="calendar"
-          v-model="value"
-          :weekdays="weekday"
-          :type="type"
-          :events="events"
-          :event-overlap-mode="mode"
-          :event-overlap-threshold="30"
-          :event-color="getEventColor"
-          @change="getEvents"
-          interval-minutes="30"
-          interval-count="48"
-          @click:more="viewDay"
-          @click:date="viewDay"
-          @click:event="showEvent"
-      >
-        <template v-slot:day-body="{ date, week }">
-          <div
-              class="v-current-time"
-              :class="{ first: date === week[0].date }"
-              :style="{ top: nowY }"
-          ></div>
+  <div class="">
+    <v-row class="ma-3 row">
+      <v-col cols="2">
+        <template v-if="!isManager">
+          <FreeTimeDialog></FreeTimeDialog>
         </template>
-      </v-calendar>
-    </v-sheet>
+        <template v-else>
+          <CreateShift btn-color="primary"/>
+        </template>
+      </v-col>
+      <v-col cols="6">
+        <v-btn icon class="" @click="$refs.calendar.prev()">
+          <v-icon>mdi-chevron-left</v-icon>
+        </v-btn>
+        <v-btn icon class="" @click="$refs.calendar.next()">
+          <v-icon>mdi-chevron-right</v-icon>
+        </v-btn>
+        <v-btn
+            outlined
+            color="grey darken-2"
+            @click="setToday"
+        >
+          Today
+        </v-btn>
+        <span class="text-md-h6 " v-if="$refs.calendar">
+          {{ $refs.calendar.title }}
+        </span>
+      </v-col>
+
+      <v-col cols="3">
+        <v-select
+            v-model="type"
+            :items="types"
+            dense
+            hide-details
+            class="cal-type"
+            label="Type"
+        >
+          <template v-slot:selection="{ item }">
+            <v-icon left>{{ item.icon }}</v-icon>
+            <span>    {{ item.text }}</span>
+          </template>
+          <template v-slot:item="{ item }">
+            <v-icon left>{{ item.icon }}</v-icon>
+            <span>    {{ item.text }}</span>
+          </template>
+        </v-select>
+      </v-col>
+
+
+    </v-row>
+
+
+    <v-calendar
+        class="cal"
+        :interval-style="intervalStyle"
+        ref="calendar"
+        v-model="value"
+        :weekdays="weekday"
+        :type="type"
+        :events="events"
+        :event-overlap-mode="mode"
+        :event-overlap-threshold="30"
+        :event-color="getEventColor"
+        @change="getEvents"
+        interval-minutes="30"
+        interval-count="48"
+        @click:more="viewDay"
+        @click:date="viewDay"
+        @click:event="showEvent"
+    >
+      <template v-slot:day-body="{ date, week }">
+        <div
+            class="v-current-time"
+            :class="{ first: date === week[0].date }"
+            :style="{ top: nowY }"
+        ></div>
+      </template>
+    </v-calendar>
     <ShiftDetail :selected-element="selectedElement"
                  :selected-event="selectedEvent"
-    ></ShiftDetail>
+    />
+    <v-snackbar
+        v-model="snackbar"
+        top
+        color="primary"
+        outlined
+    >
+      Green color indicates available time in the calendar
 
+      <template v-slot:action="{ attrs }">
+        <v-btn
+            color="pink"
+            text
+            v-bind="attrs"
+            @click="snackbar = false"
+        >
+          Close
+        </v-btn>
+      </template>
+    </v-snackbar>
   </div>
+
 </template>
 
 <script>
 import FreeTimeDialog from "@/components/FreeTimeDialog/FreeTimeDialog";
 import {mapGetters, mapState} from "vuex";
 import {getFreeTime} from "@/api/availableTime"
-import {getShiftList} from "@/api/shift";
+import {getShiftList, getShiftListByStaffId} from "@/api/shift";
 import ShiftDetail from "@/components/Calendar/ShiftDetail";
 import CreateShift from "@/components/CreateShiftDialog/CreateShiftDialog";
 
@@ -119,6 +153,7 @@ export default {
     FreeTimeDialog, ShiftDetail, CreateShift
   },
   data: () => ({
+    snackbar:true,
     //free-time
     freeTime: [],
     // end
@@ -126,7 +161,14 @@ export default {
     ready: false,
     // end
     type: "week",
-    types: ["month", "week", "day"],
+    types: [
+      {text: "Month", value: "month", icon: "fa-calendar-alt"},
+      {
+        text: "Week",
+        value: "week",
+        icon: "fa-calendar-week"
+      },
+      {text: "Day", value: "day", icon: "fa-calendar-day"}],
     mode: "stack",
     weekday: [1, 2, 3, 4, 5, 6, 0],
     value: "",
@@ -157,7 +199,10 @@ export default {
 
         }
         this.freeTime = tmp
-
+      })
+      getShiftListByStaffId(this.id).then(resp => {
+        const data = resp.data
+        this.events = shiftListToEvents(data)
       })
     } else {
       getShiftList().then(resp => {
@@ -192,7 +237,6 @@ export default {
       this.value = ''
     },
     intervalStyle(interval) {
-
       const mInterval = moment(interval.date + " " + interval.time)
       for (const time of this.freeTime) {
         if (mInterval.isBetween(time.startTime, time.endTime, null, '[]')) {
@@ -255,12 +299,22 @@ export default {
   }
 }
 
-.cal {
-  //position: absolute;
-  //bottom: 0;
-  //right: 50px;
-  //left: 50px;
+.cal-type {
+  max-height: 100px;
+}
 
+.cal {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  max-height: 85%;
+  z-index: 0;
+}
+
+.row {
+  min-height: 20%;
+  z-index: 50 !important;
 }
 </style>
 

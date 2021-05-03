@@ -11,7 +11,7 @@
           v-bind="attrs"
           v-on="on"
       >
-        Select an available time
+        New available time
       </v-btn>
      </template>
     <v-card>

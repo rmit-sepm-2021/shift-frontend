@@ -43,8 +43,10 @@
           </v-list-item-content>
         </v-list-item>
       </v-list>
+
+
     </v-navigation-drawer>
-    <div class="ma-5">
+
       <v-alert
           v-model="notification.alert"
           dismissible
@@ -53,10 +55,11 @@
           elevation="2"
           colored-border
           icon="fa-bell"
+          class="ma-5"
       >
         You've got <strong v-text="notification.size"/> new notification<span v-if="notification.size>1">s</span>!
       </v-alert>
-    </div>
+
     <v-main class="app">
       <!--      Main component-->
       <router-view/>
@@ -212,8 +215,6 @@ export default {
 
 <style>
 .app {
-
-
 
 }
 </style>
