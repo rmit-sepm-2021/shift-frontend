@@ -9,8 +9,8 @@ const api = {
     CreateShift: '/api/shift',
     AcceptAllocation: '/api/staff/accept-allocation',
     RejectAllocation: '/api/staff/reject-allocation',
-    GetAvaiableStaff:'/shift/availableStaff/',//+shiftId
-    AllocateShift:'/api/shift/allocateStaff'
+    GetAvailableStaff:'/api/shift/availableStaff/',//+shiftId
+    AllocateShift:'/api/shift/allocation'
 }
 
 export async function getShiftList() {
@@ -38,10 +38,10 @@ export async function rejectAllocation(param) {
     return request.post(api.RejectAllocation, param)
 }
 
-export async function getAvaiableStaff(shiftid) {
-    return request.get(api.GetAvaiableStaff + shiftid)
+export async function getAvailableStaff(shiftId) {
+    return request.get(api.GetAvailableStaff + shiftId)
 }
 
-export async function allocateShiftshift(param) {
-    return request.get(api.AllocateShift ,param )
+export async function allocateShift(param) {
+    return request.get(api.AllocateShift ,param)
 }
