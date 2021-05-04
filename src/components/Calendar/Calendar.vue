@@ -241,6 +241,7 @@ export default {
       // } else {
       //   open()
       // }
+      console.log({event})
       this.selectedEvent = event
       this.selectedElement = nativeEvent.target
       nativeEvent.stopPropagation()
