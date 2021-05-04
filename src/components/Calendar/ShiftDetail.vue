@@ -18,9 +18,10 @@
         <v-toolbar-title v-html="selectedEvent.name"></v-toolbar-title>
 
         <v-spacer></v-spacer>
-        <template v-if="selectedEvent.status==='Not allocated'">
+        <template v-if=" selectedEvent.status==='Not allocated'">
+
           <span>Allocate a staff</span>
-          <v-btn icon>
+          <v-btn icon @click="openDialog()">
             <v-icon>fa-plus-circle</v-icon>
           </v-btn>
         </template>
@@ -112,11 +113,58 @@
         </v-btn>
       </v-card-actions>
     </v-card>
+    <v-dialog
+        v-model="allocateShiftDialog"
+        persistent
+        max-width="600px"
+    >
+      <v-card>
+        <v-card-title>
+          <span class="headline">Select a staff</span>
+        </v-card-title>
+        <v-card-text>
+          <v-container>
+            <v-row>
+              <v-col cols="6">
+                <v-select
+                    v-model="select"
+                    :items="item"
+                    label="Select a staff"
+                    persistent-hint
+                    return-object
+                    single-line
+                ></v-select>
+              </v-col>
+            </v-row>
+          </v-container>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn
+              color="blue darken-1"
+              text
+              @click="allocateShiftDialog = false"
+          >
+            Cancel
+          </v-btn>
+          <v-btn
+              color="blue darken-1"
+              text
+              @click="handleSelectItem"
+          >
+            Confirm
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-menu>
 
 </template>
 
 <script>
+
+import {allocateShift, getAvailableStaff} from "../../api/shift";
+
 export default {
   name: "ShiftDetail",
   props: {
@@ -128,10 +176,52 @@ export default {
   },
   data: () => ({
     valid: true,
-
+    allocateShiftDialog: false,
     selectedOpen: false,
+
+    select: {},
+
+    item: []
   }),
-  methods: {}
+
+  mounted(){
+    console.log(this.selectedEvent)
+
+
+  },
+
+  methods: {
+    openDialog() {
+      this.allocateShiftDialog=
+
+          getAvailableStaff(this.selectedEvent.id).then(r => {
+            const data = r.data
+            console.log(data)
+            this.item = data.map(i=>({
+              text: i['name'],
+              value: i['id']
+            }))
+          });
+    },
+
+    handleSelectItem() {
+
+      const staffId = this.select.value
+      const shiftId = this.selectedEvent.id
+      const allocateParam = {
+        shiftId,
+        staffId
+      }
+
+      allocateShift(allocateParam).then((res) => {
+        if (res.code === 200) {
+          alert("Allocate successfully, request sent")
+        }
+        this.dialog = false
+        window.location.reload()
+      })
+    }
+  }
 
 //  todo add more actions like change shift
 }
@@ -140,3 +230,6 @@ export default {
 <style scoped>
 
 </style>
+
+
+

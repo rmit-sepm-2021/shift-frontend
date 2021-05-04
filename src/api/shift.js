@@ -43,5 +43,5 @@ export async function getAvailableStaff(shiftId) {
 }
 
 export async function allocateShift(param) {
-    return request.get(api.AllocateShift ,param)
+    return request.put(api.AllocateShift ,param)
 }

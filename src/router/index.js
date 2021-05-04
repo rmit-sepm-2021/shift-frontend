@@ -10,7 +10,6 @@ import ShiftTable from "@/components/ManagerShiftTable/ManagerShiftTable";
 import CreateShift from "../components/CreateShiftDialog/CreateShiftDialog";
 import Notification from "@/components/Notification/Notification";
 import StaffShiftTable from "@/components/StaffShiftTable/StaffShiftTable";
-import AllocateShiftDialog from "../components/AllocateShiftDialog/AllocateShiftDialog";
 Vue.use(VueRouter)
 
 const routes = [
@@ -60,15 +59,6 @@ const routes = [
                 path: 'profile',
                 name: "profile",
                 component: Profile
-            },
-
-            //allocateShift
-            {
-                path: 'staff/allocateShift',
-                component: AllocateShiftDialog,
-                meta: {
-                    title: 'Shifts'
-                }
             },
         ]
     },
