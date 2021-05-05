@@ -75,7 +75,7 @@
     <p>History</p>
     <v-data-table
         :headers="aheader"
-        :items="shiftListData"
+        :items="shiftListData2"
         :items-per-page="20"
         class="elevation-1"
     >
@@ -168,9 +168,8 @@ export default {
                 }
               this.shiftListData2 = ShiftListToTableData(historyData)
       }
-
-
     })
+
 
 
   },
