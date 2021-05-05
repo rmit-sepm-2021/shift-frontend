@@ -115,15 +115,13 @@ import {getNameAbbr} from "@/utils/str"
 import {mapState} from "vuex";
 import {getMessageListByManagerId, getMessageListByStaffId, setRead} from "@/api/message";
 
+let _ = require('lodash');
 let moment = require('moment');
 const toItem = (data) => {
   let el = document.createElement('div')
-
-  return data.map(i => {
+  let tmp = data.map(i => {
     el.innerHTML = i['content']
     console.log()
-
-
     let title = ''
     if (i['type'] === 1) {
       title = 'You receive a accept allocation message'
@@ -143,7 +141,9 @@ const toItem = (data) => {
       id: i['id'],
     }
 
-
+  })
+  return _.sortBy(tmp, function (i) {
+    return -i['createdTime']
   })
 }
 export default {

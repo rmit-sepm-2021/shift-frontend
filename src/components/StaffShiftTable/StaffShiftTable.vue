@@ -15,7 +15,7 @@
             <span>Accept your allocation</span>
             <template v-slot:activator="{ on, attrs }">
               <v-icon
-                  v-if="item['status']==='Waiting for approved'"
+                  v-if="item['status']==='Waiting for approval'"
                   class="mr-4"
                   @click="handleAccept(item)"
                   v-bind="attrs"
@@ -28,8 +28,8 @@
           <v-dialog
               v-model="dialog"
               width="500"
+              v-if="item.status!=='Rejected'"
           >
-<!--            todo youhave new message in dashborad-->
 
             <template v-slot:activator="{ on:dialog, attrs }">
               <v-tooltip bottom>
@@ -50,9 +50,8 @@
                 Please input reject reason
               </v-card-title>
               <div class="pa-5">
-                <v-textarea outlined clearable label="Reason for rejection" :value="reason"></v-textarea>
+                <v-textarea outlined clearable label="Reason for rejection" v-model="reason"></v-textarea>
               </div>
-
               <v-divider></v-divider>
               <v-card-actions>
                 <v-spacer></v-spacer>
@@ -183,34 +182,36 @@ export default {
 
     handleReject(item) {
 
-      let shiftId, reason;
+
       const param = {
-        id: shiftId,
-        reason
+        id: item.id,
+        reason: this.reason
       }
-      if (!confirm("Are you sure you want to submit the reason fo rejection")){
+      console.log({param})
+      if (!confirm("Are you sure you want to submit the reason to rejection")) {
         return
       }
-        rejectAllocation(param).then(r => {
+      rejectAllocation(param).then(r => {
+        console.log(r)
+        const param = {
+          "senderId": item.staffId,
+          "receiverId": item.managerId,
+          "content": generateRejectHtml(item, this.reason),
+          "type": 2,
+          "senderRole": 0
+        }
+        item.status = "Rejected"
+        postMessage(param).then(r => {
           console.log(r)
-          const param = {
-            "senderId": item.staffId,
-            "receiverId": item.managerId,
-            "content": generateRejectHtml(item, this.reason),
-            "type": 2,
-            "senderRole": 0
-          }
-          postMessage(param).then(r => {
-            console.log(r)
-          }).catch(r => {
-            console.log(r)
-          })
-          this.dialog = false
         }).catch(r => {
           console.log(r)
-          alert("Something is wrong")
-          this.dialog = false
         })
+        this.dialog = false
+      }).catch(r => {
+        console.log(r)
+        alert("Something is wrong")
+        this.dialog = false
+      })
     }
   }
 }

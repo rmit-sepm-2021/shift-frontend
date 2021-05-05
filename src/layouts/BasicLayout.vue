@@ -47,6 +47,9 @@
 
     </v-navigation-drawer>
 
+
+
+    <v-main class="app">
       <v-alert
           v-model="notification.alert"
           dismissible
@@ -59,8 +62,6 @@
       >
         You've got <strong v-text="notification.size"/> new notification<span v-if="notification.size>1">s</span>!
       </v-alert>
-
-    <v-main class="app">
       <!--      Main component-->
       <router-view/>
     </v-main>
