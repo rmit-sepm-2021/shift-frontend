@@ -81,6 +81,8 @@ const routes = [
             title: 'CreateShift'
         }
     }
+
+
 ]
 
 const router = new VueRouter({
