@@ -46,6 +46,7 @@
        </div>
        <div>
          
+         
          <div>email:
            <el-tag>{{ email }}</el-tag>
          </div>
@@ -63,18 +64,22 @@
            <el-tag>{{ preferredName }}</el-tag>
          </div>
        </div>
-       <div style="display:flex;justify-content:space-around;margin-top:10px">
+       <!-- id="draw-border" -->
+       <div  style="display:flex;justify-content:space-around;margin-top:10px">
          <el-button type="primary" @click="showUpdateUserInformationOfView">change information</el-button>
+         <!-- <button class="btn one" type="primary" @click="showUpdateUserInformationOfView">change information</button> -->
+         <el-button type="danger" @click="showUpdatePasswordOfView">change password</el-button>
        </div>
      </el-card>
   </div>
       <el-dialog
         title="info"
         :visible.sync="dialogVisible"
-        width="70%">
+        width="40%"
+        style="top:50px;left:200px">
       
       <div>
-        <table>
+        <table >
           <tr>
             <td>name:</td>
             <td><el-input v-model="name_2"></el-input></td>
@@ -103,6 +108,29 @@
         <el-button type="primary" @click="updateUserInformationOfView">update</el-button>
       </span> 
       </el-dialog>
+      <el-dialog
+        title="change password"
+        :visible.sync="passwordDialogVisible"
+        width="40%"
+        style="top:50px;left:200px">
+        <div>
+          <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="230px" class="demo-ruleForm">
+            <el-form-item label="Please enter your password" prop="oldPass">
+              <el-input type="password" v-model="ruleForm.oldPass" autocomplete="off"></el-input>
+            </el-form-item>
+            <el-form-item label="Please enter your new password" prop="pass">
+              <el-input type="password" v-model="ruleForm.pass" autocomplete="off"></el-input>
+            </el-form-item>
+            <el-form-item label="Please confirm the new password" prop="checkPass">
+              <el-input type="password" v-model="ruleForm.checkPass" autocomplete="off"></el-input>
+            </el-form-item>
+            <el-form-item>
+              <el-button type="primary" @click="submitForm">submit</el-button>
+              <el-button @click="resetForm('ruleForm')">reset</el-button>
+            </el-form-item>
+          </el-form>
+        </div>
+      </el-dialog>
       
   
   </div>
@@ -111,17 +139,42 @@
 <script>
 import {mapState} from "vuex"
 import {getStaffInfo, updateStaffInfo} from "@/api/staff"
-
+// import {updateStaffPass} from "@/api/staff"
 export default {
   name: "profile",
   data() {
+      var validatePass1 = (rule, value, callback) => {
+        if (value === '') {
+          callback(new Error('Please enter your password'));
+        } else if (value !== this.password) {
+          callback(new Error('Password input error!'));
+        } else {
+          callback();
+        }
+      };
+      var validatePass = (rule, value, callback) => {
+        if (value === '') {
+          callback(new Error('Please enter your new password'));
+        } else if (value == this.password) {
+          callback(new Error('The new password is the same as the original password!'));
+        } else {
+          if (this.ruleForm.checkPass !== '') {
+            this.$refs.ruleForm.validateField('checkPass');
+          }
+          callback();
+        }
+      };
+      var validatePass2 = (rule, value, callback) => {
+        if (value === '') {
+          callback(new Error('Please enter your password agian'));
+        } else if (value !== this.ruleForm.pass) {
+          callback(new Error('Inconsistent passwords entered twice!'));
+        } else {
+          callback();
+        }
+      };
+
     return {
-      // show: false,
-
-      // disabled: true,
-
-      // user: null,
-      // user2:null,
       name_: "",
       email: "",
       phone: "",
@@ -134,7 +187,29 @@ export default {
       phone2: "",
       preferredName2: "",
       address2: "",
-    }
+      passwordDialogVisible:false,
+      
+
+      ruleForm: {
+          pass: '',
+          checkPass: '',
+          oldPass:'',
+          
+        },
+      rules: {
+          pass: [
+            { validator: validatePass, trigger: 'blur' }
+          ],
+          checkPass: [
+            { validator: validatePass2, trigger: 'blur' }
+          ],
+          oldPass: [
+            { validator: validatePass1, trigger: 'blur' }
+          ]
+        }
+      };
+
+        
   },
   mounted() {
     this.initUser();
@@ -145,6 +220,46 @@ export default {
     }),
   },
   methods: {
+    submitForm() {
+      const param ={
+        // ruleForm:this.ruleForm,
+        password:this.ruleForm.pass
+      }
+      console.log(param);
+      updateStaffInfo(param).then(resp => {
+        console.log(resp);
+        if (resp) {
+          this.passwordDialogVisible = false;
+          this.initUser();
+        }
+        // else {
+        //      console.log('error submit!!');
+        //      this.dialogVisible = false;
+        //      return false;
+        //   }
+      })
+        // this.$refs[formName].validate((valid) => {
+        //   if (valid) {
+        //     this.ruleForm.staffId = this.user.id;
+        //    updateStaffPass(param).then (resp=>{
+        //      if(resp){
+        //        this.dialogVisible = false;
+        //        this.initUser();
+        //      }
+        //    })
+        //   } else {
+        //     console.log('error submit!!');
+        //     return false;
+        //   }
+        // });
+      },
+    resetForm(formName) {
+        this.$refs[formName].resetFields();
+      },
+    showUpdatePasswordOfView(){
+      this.passwordDialogVisible = true
+
+    },
     updateUserInformationOfView() {
       console.log(this.id);
       const param = {
@@ -191,6 +306,8 @@ export default {
         const data = resp.data;
 
         if (data) {
+          this.password=data.password;
+         
           this.name_ = data.name;
           this.email = data.email;
           this.phone = data.phone;
@@ -216,4 +333,75 @@ export default {
 </script>
 
 <style>
+/* #neon-btn{
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  height: 100vh;
+  background-color: black;
+} */
+.btn{
+  border:1px solid;
+  background-color: transparent;
+  text-transform: uppercase;
+  font-size: 14px;
+  padding: 10px 20px;
+  font-weight: 300;
+}
+.one{
+  color:#569ff8;
+}
+.btn:hover{
+  color: white;
+  border: 0;
+}
+.one:hover{
+  background-color: #569ff8;
+  /* -webkit-box-shadow: 10px 10px 99px 6px rgba(86,159,248,1);
+  -moz-box-shadow: 10px 10px 99px 6px rgba(86,159,248,1);
+  box-shadow: 10px 10px 99px 6px rgba(86,159,248,1); */
+}
+
+button {
+  border: 0;
+  background-color: none;
+  text-transform: uppercase;
+  color: rgb(120, 128, 148);
+  font-weight: bold;
+  position: relative;
+  outline: none;
+  padding: 10px 20px;
+  box-sizing: border-box;
+}
+button::before,button::after{
+  box-sizing: inherit;
+  position: absolute;
+  content: '';
+  border: 2px solid transparent;
+  width: 0;
+  height: 0;
+}
+button::after{
+  bottom: 0;
+  right: 0;
+}
+button::before{
+  top:0;
+  left: 0;
+}
+button:hover::before,button:hover::after{
+  width: 100%;
+  height: 100%;
+}
+button:hover::before{
+  border-top-color: rgb(120,128,148);
+  border-right-color: rgb(120, 128, 148);
+  transition: width 0.3s ease-out, height 0.3s ease-out 0.3s;
+}
+button:hover::after{
+  border-bottom-color: rgb(120, 128, 148);
+  border-left-color: rgb(120, 128, 148);
+  transition:border-color 0s ease-out 0.6s, width 0.3s ease-out 0.6s, height 0.3s ease-out 1s;
+}
+
 </style>
