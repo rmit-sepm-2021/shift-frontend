@@ -121,7 +121,7 @@
 <script>
 import {createManager, createStaff} from "@/api/user";
 import {mapState} from "vuex";
-
+import dialogMessage from "@/utils/dialogMessage";
 const passwordHint = "Passwords should be exactly 8 characters, including upper and lower case letters, digits and at least one special character \n" +
     "out of !, $, *, &, +, ?"
 // let Mock = require('mockjs')
@@ -194,7 +194,7 @@ export default {
           name, phone, email, password, createdTime: new Date().valueOf(), creatorId: this.id,
         }
         if (password !== rePassword) {
-          this.$alert("Check your password")
+          this.$alert(dialogMessage.alert.error.PasswordIsNotSameWithConfirmPassword)
           return
         }
         if (role === "staff") {
@@ -204,7 +204,7 @@ export default {
           console.log(param)
           createStaff(param).then(res => {
             if (res.code === 200) {
-              this.$alert("Add an account successfully!")
+              this.$alert(dialogMessage.alert.success.AddAccount)
             }
             this.dialog = false
             window.location.reload()
@@ -213,22 +213,20 @@ export default {
           console.log(param)
           createManager(param).then(res => {
             if (res.code === 200) {
-              this.$alert("Add an account successfully!")
+              this.$alert(dialogMessage.alert.success.AddAccount)
             }
             window.location.reload()
             this.dialog = false
           }).catch(() => {
-            this.$alert("Something is wrong")
+            this.$alert(dialogMessage.alert.error.AddAccount)
             this.dialog = false
           })
 
         } else {
-          this.$alert("Please select a role")
+          this.$alert(dialogMessage.alert.error.NoRoleWhenCreateAccount)
           return;
         }
       }
-
-      // alert("Check, check, check!")
       this.$refs.form.resetValidation()
     },
     close() {

@@ -163,6 +163,7 @@ import {createShift} from "@/api/shift"
 import {mapState} from 'vuex'
 import {getLocationList} from "@/api/location";
 import Timepicker from "@/components/Timepicker/Timepicker";
+import dialogMessage from "@/utils/dialogMessage";
 
 let moment = require('moment');
 
@@ -241,7 +242,7 @@ export default {
       }
       createShift(createShiftParams).then((res) => {
         if (res.code === 200) {
-          this.$alert("Shift successfully added")
+          this.$alert(dialogMessage.alert.success.CreateShift)
         }
         this.dialog = false
         window.location.reload()
@@ -250,7 +251,6 @@ export default {
     },
 
     reset() {
-      this.$alert(this.startTime)
       this.$refs.form.reset()
     },
 

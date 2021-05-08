@@ -50,6 +50,7 @@ import {allocateShift, getAvailableStaff} from "@/api/shift";
 import {postMessage} from '@/api/message'
 import {mapState} from "vuex";
 import {generateAllocateMessageHtml} from '@/utils/message'
+import dialogMessage from "@/utils/dialogMessage";
 
 export default {
   name: "AllocateShiftDialog",
@@ -118,7 +119,7 @@ export default {
           }).then(() => {
         allocateShift(allocateParam).then((res) => {
           if (res.code === 200) {
-            this.$alert("Allocate successfully!")
+            this.$alert(dialogMessage.alert.success.AllocateShift)
           }
           this.$emit('change', false)
           window.location.reload()

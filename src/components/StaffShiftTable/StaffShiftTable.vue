@@ -97,6 +97,7 @@ import {ShiftListToTableData} from "@/utils/shift"
 import {postMessage} from "@/api/message";
 import {mapState} from "vuex";
 import {generateAcceptHtml, generateRejectHtml} from "@/utils/message";
+import dialogMessage from "@/utils/dialogMessage";
 
 const headers = [
   {
@@ -199,11 +200,11 @@ export default {
       }
       await acceptAllocation(param).then(r => {
         console.log(r)
-        this.$alert("Accept Successfully")
+        this.$alert(dialogMessage.alert.success.AcceptAllocation)
         item.status = "Allocated"
       }).catch(r => {
         console.log(r)
-        this.$alert("Something is wrong")
+        this.$alert(dialogMessage.alert.error.Common)
       })
       if (failed) {
         return
@@ -255,7 +256,7 @@ export default {
         this.dialog = false
       }).catch(r => {
         console.log(r)
-        this.$alert("Something is wrong")
+        this.$alert(dialogMessage.alert.error.Common)
         this.dialog = false
       })
     }

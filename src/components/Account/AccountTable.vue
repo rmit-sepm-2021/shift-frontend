@@ -43,6 +43,7 @@
 import {getAllManager, getAllStaff} from '@/api/user'
 import {updateWorkingLimit} from '@/api/staff'
 import NewAccountDialog from './NewAccountDialog'
+import dialogMessage from "@/utils/dialogMessage";
 
 let moment = require('moment')
 const headers = [
@@ -129,15 +130,15 @@ export default {
       }
       const param = {staffId: this.form.id, workingLimit: this.form.workingLimit}
       if (this.form.workingLimit > 120) {
-        this.$alert("Please input a valid working limit")
+        this.$alert(dialogMessage.alert.error.LargeWorkingLimit)
         return;
       }
       updateWorkingLimit(param).then((resp) => {
         if (resp.code !== 200) {
-          this.$alert("Current workload hours is greater than new working limit. Update failed!")
+          this.$alert(dialogMessage.alert.error.UpdateWorkingLimit)
           return
         }
-        this.$alert("Change successfully")
+        this.$alert(dialogMessage.alert.success.ChangeWorkingLimit)
 
         for (const item of this.accounts) {
           if (item['_id'] === this.form.id && item['role'] === 'Staff') {
@@ -148,7 +149,7 @@ export default {
         this.dialogFormVisible = false
         // window.location.reload()
       }).catch(() => {
-        this.$alert("Something is wrong")
+        this.$alert(dialogMessage.alert.error.Common)
       })
 
     }

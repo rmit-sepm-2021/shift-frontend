@@ -62,6 +62,7 @@ import CreateShift from "@/components/CreateShiftDialog/CreateShiftDialog";
 
 import {ShiftListToTableData} from "@/utils/shift"
 import AllocateShiftDialog from "@/components/AllocateShiftDialog/AllocateShiftDialog";
+import dialogMessage from "@/utils/dialogMessage";
 
 const headers = [
   {
@@ -121,10 +122,10 @@ export default {
         message: "Are you sure you want to delete this shift?"
       }).then(() => {
         deleteShift(item.id).then(() => {
-          this.$alert("Deleted Successfully")
+          this.$alert(dialogMessage.alert.success.DeleteShift)
           window.location.reload()
         }).catch(() => {
-          this.$alert("Something wrong")
+          this.$alert(dialogMessage.alert.error.Common)
         })
       }).catch(() => {
       })

@@ -144,6 +144,7 @@
 import {mapState} from "vuex";
 import {postFreeTime} from "@/api/availableTime"
 import {getTimeOptions} from "@/utils/time"
+import dialogMessage from "@/utils/dialogMessage";
 
 let moment = require('moment');
 export default {
@@ -178,14 +179,13 @@ export default {
       const date2w = moment().add(2, 'week')
       return mDate.isBetween(moment(), date2w) || mDate.isSame(moment())
     },
-    allowedMinutes: v => v % 30 === 0,
     handleSelectFreeTime() {
       const startDateTime = this.startDate + " " + this.startTime
       const endDateTime = this.endDate + " " + this.endTime
       const startTimestamp = moment(startDateTime).valueOf()
       const endTimestamp = moment(endDateTime).valueOf()
       if (startTimestamp > endTimestamp) {
-        this.$alert("Please select a correct end date time")
+        this.$alert(dialogMessage.alert.error.ErrorFreeTime)
         return
       }
       const param = {
@@ -198,7 +198,7 @@ export default {
 
       postFreeTime(param).then((res) => {
         if (res.code === 500) {
-          this.$alert("Add available time failed. Time may be overlap")
+          this.$alert(dialogMessage.alert.error.OverlapFreeTime)
         } else {
           window.location.reload()
         }
