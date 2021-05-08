@@ -154,14 +154,14 @@ const aheader = [
 
 ]
 export default {
-  name: "ManagerShiftTable",
+  name: "StaffShiftTable",
   async mounted() {
     //load data
 
     getShiftListByStaffId(this.id).then((resp) => {
       const data = resp.data
       const historyData = []
-      this.shiftListData = ShiftListToTableData(data.filter(i=>i.status==='Waiting for approval'||i.status==='In progress'||i.status==='Allocated'))
+      this.shiftListData = ShiftListToTableData(data.filter(i=>i.statusStr==='Waiting for approval'||i.statusStr==='In progress'||i.statusStr==='Allocated'))
       for (const datum of data) {
         if (datum.status !== "Allocated" && datum.status !== "In progress") {
           historyData.push(datum);
