@@ -15,9 +15,10 @@
             left
         >
           fa-calendar-plus
-        </v-icon>New available time
+        </v-icon>
+        New available time
       </v-btn>
-     </template>
+    </template>
     <v-card>
       <v-card-title>
         <span class="headline">Select an available time</span>
@@ -200,7 +201,10 @@ export default {
         if (res.code === 500) {
           this.$alert(dialogMessage.alert.error.OverlapFreeTime)
         } else {
-          window.location.reload()
+          this.$alert(dialogMessage.alert.success.AddFreeTime).then(() => {
+            window.location.reload()
+          })
+
         }
 
       })
