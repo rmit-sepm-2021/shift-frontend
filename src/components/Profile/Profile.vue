@@ -5,7 +5,7 @@
     <!-- <div style="display:flex;justify-content:space-around;margin-top:200px">
 
       <el-card class="box-card" style="width:400px"
-               :visible.sync="dialogVisible">
+          :visible.sync="dialogVisible">
         <div slot="header" class="clearfix">
           <span>{{ name_ }}</span>
 
@@ -46,29 +46,33 @@
        </div>
        <div>
          
-         
-         <div>email:
+                 
+         <div >
+           <el-tag v-model="labelPosition" >Email:</el-tag>
+          
            <el-tag>{{ email }}</el-tag>
          </div>
-         <div>phone:
+         <div>
+           <el-tag v-model="labelPosition" >Phone:</el-tag>
            <el-tag>{{ phone }}</el-tag>
          </div>
 
-         <div>workingLimit:
+         <div>
+           <el-tag v-model="labelPosition" >Working Limit:</el-tag>
            <el-tag>{{ workingLimit }}</el-tag>
          </div>
-         <div>address:
+         <div>Address:
            <el-tag>{{ address }}</el-tag>
          </div>
-         <div>PreferredName:
+         <div>Preferred Name:
            <el-tag>{{ preferredName }}</el-tag>
          </div>
        </div>
        <!-- id="draw-border" -->
        <div  style="display:flex;justify-content:space-around;margin-top:10px">
-         <el-button type="primary" @click="showUpdateUserInformationOfView">change information</el-button>
+         <el-button type="primary" @click="showUpdateUserInformationOfView">Edit Profile</el-button>
          <!-- <button class="btn one" type="primary" @click="showUpdateUserInformationOfView">change information</button> -->
-         <el-button type="danger" @click="showUpdatePasswordOfView">change password</el-button>
+         <el-button type="danger" @click="showUpdatePasswordOfView">Change Password</el-button>
        </div>
      </el-card>
   </div>
@@ -81,31 +85,32 @@
       <div>
         <table >
           <tr>
-            <td>name:</td>
+            <td>Name</td>
             <td><el-input v-model="name_2"></el-input></td>
           </tr>
           <tr>
-            <td>email:</td>
+            <td>Email</td>
             <td><el-input v-model="email2"></el-input></td>
           </tr>
           <tr>
-            <td>phone:</td>
+            <td>Phone</td>
             <td><el-input v-model="phone2"></el-input></td>
           </tr>
+          
           <tr>
-            <td>PreferredName:</td>
-            <td><el-input v-model="preferredName2" ></el-input></td>
+            <td>Address</td>
+            <td><el-input v-model="address2" ></el-input></td>
           </tr>
           <tr>
-            <td>address:</td>
-            <td><el-input v-model="address2" ></el-input></td>
+            <td>Preferred Name</td>
+            <td><el-input v-model="preferredName2" ></el-input></td>
           </tr>
         </table>
 
       </div> 
       <span slot="footer" class="dialog-footer">
-        <el-button @click="disshowUpdateUserInformationOfView">cancle</el-button>
-        <el-button type="primary" @click="updateUserInformationOfView">update</el-button>
+        <el-button @click="disshowUpdateUserInformationOfView">Cancel</el-button>
+        <el-button type="primary" @click="updateUserInformationOfView">Update</el-button>
       </span> 
       </el-dialog>
       <el-dialog
@@ -114,14 +119,19 @@
         width="40%"
         style="top:50px;left:200px">
         <div>
-          <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="230px" class="demo-ruleForm">
-            <el-form-item label="Please enter your password" prop="oldPass">
+          <el-radio-group v-model="labelPosition" size="small">
+            <el-radio-button label="left">左对齐</el-radio-button>
+            <el-radio-button label="right">右对齐</el-radio-button>
+            <el-radio-button label="top">顶部对齐</el-radio-button>
+          </el-radio-group>
+          <el-form :model="ruleForm" status-icon :rules="rules" :label-position="labelPosition" ref="ruleForm" label-width="230px" class="demo-ruleForm">
+            <el-form-item label="original password" prop="oldPass">
               <el-input type="password" v-model="ruleForm.oldPass" autocomplete="off"></el-input>
             </el-form-item>
-            <el-form-item label="Please enter your new password" prop="pass">
+            <el-form-item label="new password" prop="pass">
               <el-input type="password" v-model="ruleForm.pass" autocomplete="off"></el-input>
             </el-form-item>
-            <el-form-item label="Please confirm the new password" prop="checkPass">
+            <el-form-item label="confirm new password" prop="checkPass">
               <el-input type="password" v-model="ruleForm.checkPass" autocomplete="off"></el-input>
             </el-form-item>
             <el-form-item>
@@ -138,7 +148,7 @@
 
 <script>
 import {mapState} from "vuex"
-import {getStaffInfo, updateStaffInfo} from "@/api/staff"
+import {getStaffInfo, updateStaffInfo,updateStaffInfoP} from "@/api/staff"
 // import {updateStaffPass} from "@/api/staff"
 export default {
   name: "profile",
@@ -175,6 +185,7 @@ export default {
       };
 
     return {
+      labelPosition: 'right',
       name_: "",
       email: "",
       phone: "",
@@ -188,13 +199,12 @@ export default {
       preferredName2: "",
       address2: "",
       passwordDialogVisible:false,
-      
+
 
       ruleForm: {
-          pass: '',
+          pass:'',
           checkPass: '',
           oldPass:'',
-          
         },
       rules: {
           pass: [
@@ -209,7 +219,7 @@ export default {
         }
       };
 
-        
+
   },
   mounted() {
     this.initUser();
@@ -221,12 +231,15 @@ export default {
   },
   methods: {
     submitForm() {
+      this.password=this.ruleForm.pass;
       const param ={
         // ruleForm:this.ruleForm,
-        password:this.ruleForm.pass
+        id: this.id,
+        password:this.password
       }
       console.log(param);
-      updateStaffInfo(param).then(resp => {
+      console.log(this.password);
+      updateStaffInfoP(param).then(resp => {
         console.log(resp);
         if (resp) {
           this.passwordDialogVisible = false;

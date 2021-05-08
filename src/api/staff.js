@@ -7,6 +7,9 @@ export async function getStaffInfo(id) {
 export async function updateStaffInfo(param) {
     return request.put('/api/staff', param)
 }
+export async function updateStaffInfoP(param) {
+    return request.put('/api/staff', param)
+}
 // export async function updateStaffPass(param) {
 //     return request.put('/api/staff', param)
 // }
