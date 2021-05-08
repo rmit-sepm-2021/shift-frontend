@@ -81,25 +81,8 @@
     <ShiftDetail :selected-element="selectedElement"
                  :selected-event="selectedEvent"
     />
-    <v-snackbar
-        v-model="snackbar"
-        top
-        color="primary"
-        outlined
-    >
-      Green color indicates available time in the calendar
 
-      <template v-slot:action="{ attrs }">
-        <v-btn
-            color="pink"
-            text
-            v-bind="attrs"
-            @click="snackbar = false"
-        >
-          Close
-        </v-btn>
-      </template>
-    </v-snackbar>
+    <div id="mount-point"></div>
   </div>
 
 </template>
@@ -111,6 +94,7 @@ import {getFreeTime} from "@/api/availableTime"
 import {getShiftList, getShiftListByStaffId} from "@/api/shift";
 import ShiftDetail from "@/components/Calendar/ShiftDetail";
 import CreateShift from "@/components/CreateShiftDialog/CreateShiftDialog";
+
 
 let moment = require('moment');
 const colors = [
@@ -134,7 +118,7 @@ const shiftListToEvents = (list) => {
       end: mEndTime.toDate(),
       staffName: datum['staffName'],
       managerName: datum['managerName'],
-      location: datum['managerName'],
+      location: datum['location'],
       description: datum['description'],
       startTime: mStartTime.format("LLL"),
       endTime: mEndTime.format("LLL"),
@@ -144,6 +128,7 @@ const shiftListToEvents = (list) => {
       status: datum['statusStr'],
       color: colors[datum['id'] % colors.length],
       timed: true,
+      title: datum['title'],
     })
   }
   return events
@@ -153,7 +138,7 @@ export default {
     FreeTimeDialog, ShiftDetail, CreateShift
   },
   data: () => ({
-    snackbar:true,
+    snackbar: true,
     //free-time
     freeTime: [],
     // end
@@ -179,6 +164,8 @@ export default {
   }),
 
   mounted() {
+
+
     // current time
     this.ready = true
     this.scrollToTime()

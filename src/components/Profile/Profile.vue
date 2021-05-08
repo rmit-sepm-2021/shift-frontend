@@ -86,7 +86,7 @@ export default {
       //hide button
       this.show = !this.show;
       this.disabled = true;
-      alert("Update successful!");
+      this.$alert("Update successful!");
 
       updateStaffInfo(param).then(resp => {
         console.log(resp);

@@ -20,9 +20,9 @@
                 <v-icon
                     left
                 >
-                  fa-plus
+                  fa-calendar-plus
                 </v-icon>
-                 Add New Shift
+                Add New Shift
 
               </v-btn>
             </template>
@@ -42,42 +42,6 @@
                           required
                       ></v-text-field>
                     </v-col>
-
-                    <v-col
-                        cols="12"
-                        sm="6"
-                        md="4"
-                    >
-                      <v-menu
-                          ref="startTimeMenu"
-                          v-model="startTimeMenu"
-                          :close-on-content-click="false"
-                          :nudge-right="40"
-                          :return-value.sync="startTime"
-                          transition="scale-transition"
-                          offset-y
-                          max-width="290px"
-                          min-width="290px"
-                      >
-                        <template v-slot:activator="{ on, attrs }">
-                          <v-text-field
-                              v-model="startTime"
-                              label="Pick an start time"
-                              prepend-icon="mdi-clock-time-four-outline"
-                              readonly
-                              v-bind="attrs"
-                              v-on="on"
-                          ></v-text-field>
-                        </template>
-                        <v-time-picker
-                            v-if="startTimeMenu"
-                            v-model="startTime"
-                            full-width
-                            @click:minute="$refs.startTimeMenu.save(startTime)"
-                        ></v-time-picker>
-                      </v-menu>
-                    </v-col>
-
                     <v-col
                         cols="12"
                         sm="6"
@@ -94,7 +58,7 @@
                         <template v-slot:activator="{ on, attrs }">
                           <v-text-field
                               v-model="startDate"
-                              label="Pick a created date"
+                              label="Pick a start date"
                               prepend-icon="mdi-calendar"
                               v-bind="attrs"
                               v-on="on"
@@ -109,6 +73,15 @@
                       </v-menu>
 
                     </v-col>
+                    <v-col
+                        cols="12"
+                        sm="6"
+                        md="4"
+                    >
+                      <Timepicker label="Pick a start time" v-model="startTime"></Timepicker>
+                    </v-col>
+
+
                     <v-col
                         cols="12"
                         sm="6"
@@ -189,11 +162,13 @@
 import {createShift} from "@/api/shift"
 import {mapState} from 'vuex'
 import {getLocationList} from "@/api/location";
+import Timepicker from "@/components/Timepicker/Timepicker";
 
 let moment = require('moment');
 
 export default {
   name: "CreateShift",
+  components: {Timepicker},
   props: {
     text: Boolean,
     btnColor: String,
@@ -214,9 +189,9 @@ export default {
     startDateMenu: false,
     location: "",
     locations: [],
-    title: "A title",
-    duration: 4,
-    description: "no 996",
+    title: "",
+    duration: 2,
+    description: "",
     valid: true,
     TimeRules: [
       v => !!v || 'Time is required',
@@ -242,10 +217,8 @@ export default {
     },
     add() {
       const isValid = this.$refs.form.validate()
-
-
       if (!isValid) {
-        alert("Please fill required fields.")
+        this.$alert("Please fill required fields.")
         return;
       }
       const {
@@ -257,6 +230,10 @@ export default {
       // return;
       const createdTime = new Date().valueOf()
       const startTime = moment(this.startDate + " " + this.startTime).valueOf()
+      if (startTime < new Date().valueOf()) {
+        this.$alert("Start time should be later than now.")
+        return;
+      }
       const endTime = moment(startTime).add(this.duration, 'hour')
       const createShiftParams = {
         startTime, createdTime, title, description, managerId: id
@@ -264,17 +241,16 @@ export default {
       }
       createShift(createShiftParams).then((res) => {
         if (res.code === 200) {
-          alert("Shift successfully added")
+          this.$alert("Shift successfully added")
         }
         this.dialog = false
         window.location.reload()
       })
-
-
       this.$refs.form.resetValidation()
     },
 
     reset() {
+      this.$alert(this.startTime)
       this.$refs.form.reset()
     },
 

@@ -129,15 +129,15 @@ export default {
       }
       const param = {staffId: this.form.id, workingLimit: this.form.workingLimit}
       if (this.form.workingLimit > 120) {
-        alert("Please input a valid working limit")
+        this.$alert("Please input a valid working limit")
         return;
       }
       updateWorkingLimit(param).then((resp) => {
         if (resp.code !== 200) {
-          alert("Current workload hours is greater than new working limit. Update failed!")
+          this.$alert("Current workload hours is greater than new working limit. Update failed!")
           return
         }
-        alert("Change successfully")
+        this.$alert("Change successfully")
 
         for (const item of this.accounts) {
           if (item['_id'] === this.form.id && item['role'] === 'Staff') {
@@ -148,7 +148,7 @@ export default {
         this.dialogFormVisible = false
         // window.location.reload()
       }).catch(() => {
-        alert("Something is wrong")
+        this.$alert("Something is wrong")
       })
 
     }

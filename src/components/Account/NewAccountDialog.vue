@@ -13,7 +13,7 @@
         <v-icon
             left
         >
-          fa-plus
+          fa-user-plus
         </v-icon>
         Create an account
       </v-btn>
@@ -124,8 +124,9 @@ import {mapState} from "vuex";
 
 const passwordHint = "Passwords should be exactly 8 characters, including upper and lower case letters, digits and at least one special character \n" +
     "out of !, $, *, &, +, ?"
-let Mock = require('mockjs')
-let Random = Mock.Random
+// let Mock = require('mockjs')
+// let Random = Mock.Random
+
 export default {
   name: "NewAccountDialog",
   data: () => ({
@@ -141,22 +142,22 @@ export default {
     formTitle: "Create a new account",
 
     //  formdata
-    name: Random.name(),
-    email: Random.email(),
-    password: 'Test!123',
-    rePassword: "Test!123",
-    address: "an address",
-    role: "staff",
-    workingLimit: 120,
-    phone: "996",
     // name: Random.name(),
-    // email: "",
-    // password: "",
-    // rePassword: "",
-    // address: "",
+    // email: Random.email(),
+    // password: 'Test!123',
+    // rePassword: "Test!123",
+    // address: "an address",
     // role: "staff",
     // workingLimit: 120,
-    // phone: "",
+    // phone: "996",
+    name: "",
+    email: "",
+    password: "",
+    rePassword: "",
+    address: "",
+    role: "staff",
+    workingLimit: 40,
+    phone: "",
     passwordRules: [
       v => !!v || 'Password is required',
       v => /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!$*&+?])[A-Za-z\d!$*&+?]{8,}$/.test(v) || 'Password must be valid. ' + passwordHint,
@@ -193,7 +194,7 @@ export default {
           name, phone, email, password, createdTime: new Date().valueOf(), creatorId: this.id,
         }
         if (password !== rePassword) {
-          alert("Check your password")
+          this.$alert("Check your password")
           return
         }
         if (role === "staff") {
@@ -203,7 +204,7 @@ export default {
           console.log(param)
           createStaff(param).then(res => {
             if (res.code === 200) {
-              alert("Add an account successfully!")
+              this.$alert("Add an account successfully!")
             }
             this.dialog = false
             window.location.reload()
@@ -212,17 +213,17 @@ export default {
           console.log(param)
           createManager(param).then(res => {
             if (res.code === 200) {
-              alert("Add an account successfully!")
+              this.$alert("Add an account successfully!")
             }
             window.location.reload()
             this.dialog = false
           }).catch(() => {
-            alert("Something is wrong")
+            this.$alert("Something is wrong")
             this.dialog = false
           })
 
         } else {
-          alert("Please select a role")
+          this.$alert("Please select a role")
           return;
         }
       }

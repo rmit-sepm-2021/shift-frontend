@@ -11,7 +11,11 @@
           v-bind="attrs"
           v-on="on"
       >
-        New available time
+        <v-icon
+            left
+        >
+          fa-calendar-plus
+        </v-icon>New available time
       </v-btn>
      </template>
     <v-card>
@@ -181,7 +185,7 @@ export default {
       const startTimestamp = moment(startDateTime).valueOf()
       const endTimestamp = moment(endDateTime).valueOf()
       if (startTimestamp > endTimestamp) {
-        alert("Please select a correct end date time")
+        this.$alert("Please select a correct end date time")
         return
       }
       const param = {
@@ -194,7 +198,7 @@ export default {
 
       postFreeTime(param).then((res) => {
         if (res.code === 500) {
-          alert("Add available time failed. Time may be overlap")
+          this.$alert("Add available time failed. Time may be overlap")
         } else {
           window.location.reload()
         }

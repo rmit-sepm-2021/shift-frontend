@@ -7,8 +7,9 @@
               class="mr-auto"
               :items="inboxOptions"
               label="Message Type"
-
               outlined
+              v-model="type"
+              @change="changeMessageType"
               dense
           ></v-select>
         </v-col>
@@ -23,7 +24,6 @@
 
           >
             <template v-for="(item, index) in items">
-
               <v-list-item :key="item.createdTime" @click="handleSelectItem(item)">
 
                 <template v-slot:default="{  }">
@@ -102,7 +102,7 @@
 
       </v-col>
     </v-row>
-
+    <div id="mount-point"></div>
   </div>
 
 
@@ -110,7 +110,6 @@
 
 <script>
 
-import {generateMessageHtml} from "@/utils/message"
 import {getNameAbbr} from "@/utils/str"
 import {mapState} from "vuex";
 import {getMessageListByManagerId, getMessageListByStaffId, setRead} from "@/api/message";
@@ -124,11 +123,11 @@ const toItem = (data) => {
     console.log()
     let title = ''
     if (i['type'] === 1) {
-      title = 'You receive a accept allocation message'
+      title = 'You received a accept allocation message'
     } else if (i['type'] === 2) {
-      title = 'You receive a reject allocation message'
+      title = 'You received a reject allocation message'
     } else {
-      title = 'You receive a shift allocation message'
+      title = 'You received a shift allocation message'
     }
     return {
       createdTime: i['createdTime'],
@@ -149,7 +148,7 @@ const toItem = (data) => {
 export default {
   name: "Notification",
   data: () => ({
-
+    rawData: [],
     ba: false,
     inboxOptions: ["Read", "Unread", "All"],
     selectedItem: {},
@@ -157,9 +156,9 @@ export default {
       {}
     ],
     items: [],
+    type: 'All',
   }),
   computed: {
-    html: () => generateMessageHtml(this.messages),
     ...mapState({
       role: state => state.user.role,
       id: state => state.user.id
@@ -169,11 +168,13 @@ export default {
     if (this.role === "STAFF") {
       getMessageListByStaffId(this.id).then(r => {
         const data = r.data
+        this.rawData = data
         this.items = toItem(data)
       });
     } else {
       getMessageListByManagerId(this.id).then(r => {
         const data = r.data
+        this.rawData = data
         this.items = toItem(data)
       })
     }
@@ -181,6 +182,18 @@ export default {
   },
 
   methods: {
+    changeMessageType() {
+      console.log(this.rawData.filter(i => !i['isRead']))
+
+      if (this.type === 'Unread') {
+        this.items = toItem(this.rawData.filter(i => !i['isRead']))
+      } else if (this.type === 'Read') {
+        this.items = toItem(this.rawData.filter(i => i['isRead']))
+      } else {
+        this.items = toItem(this.rawData)
+      }
+
+    },
     getNameAbbr,
     moment,
     handleSelectItem(item) {

@@ -160,16 +160,15 @@ export default {
 
     getShiftListByStaffId(this.id).then((resp) => {
       const data = resp.data
-      const historyData=[]
-      this.shiftListData = ShiftListToTableData(data)
-              for (const datum of data) {
-                if(datum.status==="Finished"){
-                  historyData.push(datum);
-                }
-              this.shiftListData2 = ShiftListToTableData(historyData)
+      const historyData = []
+      this.shiftListData = ShiftListToTableData(data.filter(i=>i.status==='Waiting for approval'||i.status==='In progress'||i.status==='Allocated'))
+      for (const datum of data) {
+        if (datum.status !== "Allocated" && datum.status !== "In progress") {
+          historyData.push(datum);
+        }
+        this.shiftListData2 = ShiftListToTableData(historyData)
       }
     })
-
 
 
   },
@@ -200,11 +199,11 @@ export default {
       }
       await acceptAllocation(param).then(r => {
         console.log(r)
-        alert("Accept Successfully")
+        this.$alert("Accept Successfully")
         item.status = "Allocated"
       }).catch(r => {
         console.log(r)
-        alert("Something is wrong")
+        this.$alert("Something is wrong")
       })
       if (failed) {
         return
@@ -256,7 +255,7 @@ export default {
         this.dialog = false
       }).catch(r => {
         console.log(r)
-        alert("Something is wrong")
+        this.$alert("Something is wrong")
         this.dialog = false
       })
     }

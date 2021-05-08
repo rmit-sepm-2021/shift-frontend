@@ -21,7 +21,7 @@
         <template v-if=" selectedEvent.status==='Not allocated'">
 
           <span>Allocate a staff</span>
-          <v-btn icon @click="openDialog()">
+          <v-btn icon @click="openDialog">
             <v-icon>fa-plus-circle</v-icon>
           </v-btn>
         </template>
@@ -96,6 +96,14 @@
             </v-col>
 
           </v-row>
+          <v-row>
+            <v-col cols="12"  >
+              <v-text-field
+                  v-model.trim="selectedEvent.location"
+                  label="Location"
+              ></v-text-field>
+            </v-col>
+          </v-row>
           <v-textarea
               v-model.trim="selectedEvent.description"
               label="Description"
@@ -113,57 +121,16 @@
         </v-btn>
       </v-card-actions>
     </v-card>
-    <v-dialog
-        v-model="allocateShiftDialog"
-        persistent
-        max-width="600px"
-    >
-      <v-card>
-        <v-card-title>
-          <span class="headline">Select a staff</span>
-        </v-card-title>
-        <v-card-text>
-          <v-container>
-            <v-row>
-              <v-col cols="6">
-                <v-select
-                    v-model="select"
-                    :items="item"
-                    label="Select a staff"
-                    persistent-hint
-                    return-object
-                    single-line
-                ></v-select>
-              </v-col>
-            </v-row>
-          </v-container>
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn
-              color="blue darken-1"
-              text
-              @click="allocateShiftDialog = false"
-          >
-            Cancel
-          </v-btn>
-          <v-btn
-              color="blue darken-1"
-              text
-              @click="handleSelectItem"
-          >
-            Confirm
-          </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
+    <AllocateShiftDialog v-model="allocateShiftDialog" :shift="selectedEvent"
+                         :shift-id="selectedEvent.id"></AllocateShiftDialog>
   </v-menu>
 
 </template>
 
 <script>
 
-import {allocateShift, getAvailableStaff} from "../../api/shift";
+// import {allocateShift, getAvailableStaff} from "@/api/shift";
+import AllocateShiftDialog from "@/components/AllocateShiftDialog/AllocateShiftDialog";
 
 export default {
   name: "ShiftDetail",
@@ -174,6 +141,7 @@ export default {
     selectedElement: null,
 
   },
+  components: {AllocateShiftDialog},
   data: () => ({
     valid: true,
     allocateShiftDialog: false,
@@ -184,46 +152,12 @@ export default {
     item: []
   }),
 
-  mounted(){
-    console.log(this.selectedEvent)
-
-
-  },
-
   methods: {
     openDialog() {
-      this.allocateShiftDialog=
-
-          getAvailableStaff(this.selectedEvent.id).then(r => {
-            const data = r.data
-            console.log(data)
-            this.item = data.map(i=>({
-              text: i['name'],
-              value: i['id']
-            }))
-          });
-    },
-
-    handleSelectItem() {
-
-      const staffId = this.select.value
-      const shiftId = this.selectedEvent.id
-      const allocateParam = {
-        shiftId,
-        staffId
-      }
-
-      allocateShift(allocateParam).then((res) => {
-        if (res.code === 200) {
-          alert("Allocate successfully, request sent")
-        }
-        this.dialog = false
-        window.location.reload()
-      })
+      this.allocateShiftDialog = true;
     }
   }
 
-//  todo add more actions like change shift
 }
 </script>
 

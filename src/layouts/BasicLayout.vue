@@ -50,18 +50,25 @@
 
 
     <v-main class="app">
-      <v-alert
+      <v-snackbar
           v-model="notification.alert"
-          dismissible
+          top
           color="primary"
-          border="left"
-          elevation="2"
-          colored-border
-          icon="fa-bell"
-          class="ma-5"
+          outlined
       >
         You've got <strong v-text="notification.size"/> new notification<span v-if="notification.size>1">s</span>!
-      </v-alert>
+
+        <template v-slot:action="{ attrs }">
+          <v-btn
+              color="pink"
+              text
+              v-bind="attrs"
+              @click="notification.alert = false"
+          >
+            Close
+          </v-btn>
+        </template>
+      </v-snackbar>
       <!--      Main component-->
       <router-view/>
     </v-main>
@@ -118,7 +125,7 @@ export default {
       } else if (this.role === "MANAGER") {
         return true;
       } else {
-        alert("Can not know your role.")
+        this.$alert("Can not know your role.")
         return false;
       }
     },

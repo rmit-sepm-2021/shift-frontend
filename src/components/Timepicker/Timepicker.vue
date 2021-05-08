@@ -1,10 +1,12 @@
 <template>
   <v-select
-      v-model="time"
+
       :items="timeOpts"
       :rules="[v => !!v || 'Time is required']"
       :label="label"
       required
+      v-bind:value="value"
+      v-on:change="onChange"
   ></v-select>
 </template>
 
@@ -12,8 +14,12 @@
 export default {
   name: "Timepicker",
   props: {
-    time: String,
     label: String,
+    value: String,
+  },
+  model: {
+    prop: 'value',
+    event: 'change'
   },
   computed: {
     timeOpts() {
@@ -30,6 +36,11 @@ export default {
 
       return opts
     },
+  },
+  methods: {
+    onChange(value) {
+      this.$emit('change', value)
+    }
   }
 
 
