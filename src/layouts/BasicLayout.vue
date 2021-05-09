@@ -125,7 +125,7 @@ export default {
     loginAsStaff() {
       const {Login} = this
       const loginParams = {
-        email: "mask@test.com", password: "123456"
+        email: "mask@test.com", password: "Test!123"
       }
 
       Login(loginParams).then((res) => {
