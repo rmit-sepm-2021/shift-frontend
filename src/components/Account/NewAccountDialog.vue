@@ -140,16 +140,6 @@ export default {
       value: "manager"
     }],
     formTitle: "Create a new account",
-
-    //  formdata
-    // name: Random.name(),
-    // email: Random.email(),
-    // password: 'Test!123',
-    // rePassword: "Test!123",
-    // address: "an address",
-    // role: "staff",
-    // workingLimit: 120,
-    // phone: "996",
     name: "",
     email: "",
     password: "",

@@ -48,7 +48,6 @@
     </v-navigation-drawer>
 
 
-
     <v-main class="app">
       <v-snackbar
           v-model="notification.alert"
@@ -153,7 +152,7 @@ export default {
         return [
           ["fa-tachometer-alt", "Dashboard", "/dashboard"],
           ["mdi-bell", "Notification", "/notification"],
-          // ["mdi-account", "Profile", "/manager/profile"],
+          ["mdi-account", "Profile", "/profile"],
           ["mdi-account-box-multiple", "Account List", "/manager/accounts"],
           ["mdi-timetable", "Shift List", "/manager/shifts"],
         ]
@@ -183,7 +182,7 @@ export default {
     loginAsStaff() {
       const {Login} = this
       const loginParams = {
-        email: "mask@test.com", password: "123456"
+        email: "mask@test.com", password: "Test!123"
       }
 
       Login(loginParams).then((res) => {
@@ -198,7 +197,7 @@ export default {
     loginAsManager() {
       const {Login} = this
       const loginParams = {
-        email: "test@qq.com", password: "123456"
+        email: "test@qq.com", password: "Test!123"
       }
       Login(loginParams).then((res) => {
         console.log(res)
