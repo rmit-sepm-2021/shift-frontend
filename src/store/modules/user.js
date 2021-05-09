@@ -3,6 +3,7 @@ import {login} from '@/api/login'
 // import { ACCESS_TOKEN } from '@/store/mutation-types'
 // import { welcome } from '@/utils/util'
 //
+import auth from "@/utils/auth";
 
 const user = {
     state: {
@@ -29,6 +30,9 @@ const user = {
         SET_USER: (state, user) => {
             Object.assign(state, user)
         },
+        LOGOUT: (state) => {
+            Object.assign(state, {})
+        },
     },
     actions: {
         Login({commit}, param) {
@@ -44,6 +48,13 @@ const user = {
 
             })
 
+        },
+        Logout({commit}) {
+            return new Promise((resolve) => {
+                auth.logout()
+                commit('LOGOUT')
+                resolve()
+            })
         }
     },
     getters: {

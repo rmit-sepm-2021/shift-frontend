@@ -42,6 +42,11 @@
             <v-list-item-title>{{ text }}</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
+        <v-list-item @click="logout">
+          <v-list-item-content>
+            <v-list-item-title>Logout</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
       </v-list>
 
 
@@ -210,8 +215,16 @@ export default {
         window.location.reload()
       })
     },
-    ...mapActions(['Login']),
-    doNothing() {
+    ...mapActions(['Login', 'Logout']),
+    logout() {
+      this.$confirm({
+        title: "Logout?",
+        message: "Are you sure you want to log out?"
+      }).then(() => {
+        this.Logout()
+        this.$router.push('/login')
+      })
+
     },
     switchToStaff() {
       this.loginAsStaff()

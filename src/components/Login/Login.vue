@@ -1,6 +1,7 @@
 <template>
+
   <v-form v-model="valid" ref="form">
-    <v-container>
+    <v-container class="d-flex flex-column align-center mt-16">
       <v-alert
           :value="loginAlert"
           border="top"
@@ -19,10 +20,11 @@
       >
         Please enter correct email or password
       </v-alert>
+      <h1>Login to shift system</h1>
       <v-row>
         <v-col
             cols="12"
-            md="4"
+
         >
           <v-text-field
               v-model="email"
@@ -32,10 +34,8 @@
               required
           ></v-text-field>
         </v-col>
-
         <v-col
             cols="12"
-            md="4"
         >
           <v-text-field
               v-model="password"
@@ -55,6 +55,8 @@
       </v-btn>
     </v-container>
   </v-form>
+
+
 </template>
 
 <script>
@@ -103,10 +105,11 @@ export default {
         console.log(res)
         const data = res.data
         this.loginAlert = !this.loginAlert
+        console.log({data})
         auth.setToken(data['token'])
         setTimeout(() => {
           this.$router.push('/')
-        }, 2000)
+        }, 1000)
       })
     },
     ...mapActions(['Login']),
