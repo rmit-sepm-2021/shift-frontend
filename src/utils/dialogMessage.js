@@ -9,7 +9,7 @@ export default {
             CreateShift:"The shift has been created.",
             DeleteShift:"The shift has been deleted.",
             AcceptAllocation:"The allocation has been accepted. A notification has been sent to the manager.",
-            AddFreeTime:"An available time has been added."
+            AddFreeTime:"An available time has been added.",
         },
         error: {
             Common:"Something is wrong",
