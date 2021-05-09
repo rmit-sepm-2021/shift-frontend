@@ -111,7 +111,7 @@
 <script>
 
 import {getNameAbbr} from "@/utils/str"
-import {mapState} from "vuex";
+import {mapMutations, mapState} from "vuex";
 import {getMessageListByManagerId, getMessageListByStaffId, setRead} from "@/api/message";
 
 let _ = require('lodash');
@@ -182,6 +182,7 @@ export default {
   },
 
   methods: {
+    ...mapMutations(['SIZE_DECREMENT']),
     changeMessageType() {
       console.log(this.rawData.filter(i => !i['isRead']))
 
@@ -204,6 +205,7 @@ export default {
       }
       if (!item['isRead']) {
         item['isRead'] = true
+        this.SIZE_DECREMENT()
         setRead(param)
       }
 

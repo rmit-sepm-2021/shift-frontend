@@ -33,7 +33,7 @@
         <v-list-item v-for="[icon, text,path] in SideBarLink" :key="text" link :to="path">
 
           <v-list-item-icon>
-            <v-badge color="red" v-if="text==='Notification'&& notification.size!==0" :content="notification.size">
+            <v-badge color="red" v-if="text==='Notification'&& size!==0" :content="size">
               <v-icon v-text="icon"></v-icon>
             </v-badge>
             <v-icon v-text="icon" v-else></v-icon>
@@ -55,7 +55,7 @@
           color="primary"
           outlined
       >
-        You've got <strong v-text="notification.size"/> new notification<span v-if="notification.size>1">s</span>!
+        You've got <strong v-text="size"/> new notification<span v-if="size>1">s</span>!
 
         <template v-slot:action="{ attrs }">
           <v-btn
@@ -76,7 +76,7 @@
 </template>
 
 <script>
-import {mapActions, mapGetters, mapState} from 'vuex'
+import {mapActions, mapGetters, mapMutations, mapState} from 'vuex'
 import auth from "@/utils/auth";
 import {getMessageListByManagerId, getMessageListByStaffId} from "@/api/message";
 import * as _ from 'lodash'
@@ -88,7 +88,7 @@ export default {
     const {Login} = this
     const loginParams = {
       // email: "mask@test.com", password: "123456"
-      email: "test@qq.com", password: "123456"
+      email: "test@qq.com", password: "Test!123"
     }
     //TODO start here
     if (!auth.isLogged()) {
@@ -133,6 +133,7 @@ export default {
       name: state => state.user.name,
       email: state => state.user.email,
       role: state => state.user.role,
+      size: state => state.message.size,
     }),
     ...mapGetters([
       'nameAbbreviation',
@@ -169,13 +170,15 @@ export default {
     },
   }),
   methods: {
+    ...mapMutations(['SET_SIZE']),
+
     setUpNotification(data) {
       const unreadData = _.filter(data, (item => {
         return !item.isRead
       }))
       if (unreadData.length !== 0) {
         this.notification.alert = true
-
+        this.SET_SIZE(unreadData.length)
         this.notification.size = unreadData.length
       }
     },
