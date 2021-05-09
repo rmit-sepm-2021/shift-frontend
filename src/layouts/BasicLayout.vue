@@ -61,7 +61,7 @@ export default {
     const {Login} = this
     const loginParams = {
       // email: "mask@test.com", password: "123456"
-      email: "test@qq.com", password: "123456"
+      email: "test@qq.com", password: "Test!123"
     }
     //TODO start here
     if (!auth.isLogged()) {
@@ -140,7 +140,7 @@ export default {
     loginAsManager() {
       const {Login} = this
       const loginParams = {
-        email: "test@qq.com", password: "123456"
+        email: "test@qq.com", password: "Test!123"
       }
       Login(loginParams).then((res) => {
         console.log(res)
