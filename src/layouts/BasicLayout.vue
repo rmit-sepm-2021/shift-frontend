@@ -110,7 +110,7 @@ export default {
         return [
           ["fa-tachometer-alt", "Dashboard", "/dashboard"],
           // ["mdi-bell", "Notification", "/manager/notification"],
-          // ["mdi-account", "Profile", "/manager/profile"],
+          ["mdi-account", "Profile", "/profile"],
           ["mdi-account-box-multiple", "Account List", "/manager/accounts"],
           ["mdi-timetable", "Shift List", "/manager/shifts"],
         ]
