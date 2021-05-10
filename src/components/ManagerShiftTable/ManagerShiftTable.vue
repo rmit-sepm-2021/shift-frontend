@@ -50,7 +50,7 @@
         </template>
       </v-data-table>
     </v-sheet>
-
+    <div id="main" :style="{width: '300px', height: '300px'}"></div>
   </div>
 
 </template>
@@ -99,6 +99,44 @@ export default {
   name: "ManagerShiftTable",
   components: {CreateShift, AllocateShiftDialog},
   async mounted() {
+
+// 基于准备好的dom，初始化echarts实例
+    var myChart = this.$echarts.init(document.getElementById('main'));
+// 绘制图表
+    myChart.setOption({
+      tooltip: {
+        trigger: 'item'
+      },
+      legend: {
+        top: '5%',
+        left: 'center'
+      },
+      series: [
+        {
+          name: 'Workload',
+          type: 'pie',
+          radius: ['40%', '70%'],
+          avoidLabelOverlap: true,
+          itemStyle: {
+            borderRadius: 10,
+            borderColor: '#fff',
+            borderWidth: 2
+          },
+          label: {
+            show: false,
+            position: 'center'
+          },
+
+          labelLine: {
+            show: false
+          },
+          data: [
+            {value: 8, name: 'Current Workload'},
+            {value: 112, name: 'Remaining Workload'},
+          ]
+        }
+      ]
+    });
     //load data
     getShiftList().then((resp) => {
       const data = resp.data

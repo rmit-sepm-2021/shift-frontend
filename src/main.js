@@ -8,8 +8,9 @@ import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 import('./mock.js')
 import {confirm,_alert} from '@/utils/alert'
-
+import * as echarts from 'echarts'
 Vue.config.productionTip = true
+Vue.prototype.$echarts = echarts
 Vue.use(ElementUI);
 Vue.prototype.$confirm = confirm;
 Vue.prototype.$alert = _alert;

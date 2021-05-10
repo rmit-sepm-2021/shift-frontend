@@ -17,3 +17,6 @@ export async function createManager(param) {
     return request.post('/api/manager', param)
 }
 
+export async function deactivateUser({id, role}) {
+    return request.post('/api/deactivate-user', {id, role})
+}

@@ -315,7 +315,7 @@ export default {
       } else {
         getManagerInfo(this.id).then(resp => {
           const data = resp.data;
-          console.log(data)
+
           if (data) {
             this.info = {...data}
             this.form = {...data}

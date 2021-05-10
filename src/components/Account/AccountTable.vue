@@ -13,13 +13,36 @@
           class="elevation-1"
       >
         <template v-slot:item.actions="{ item }">
-          <v-icon
-              v-if="item['role']==='Staff'"
-              small
-              @click="changeWorkingLimitAction(item)"
-          >
-            fa-pencil-alt
-          </v-icon>
+          <v-tooltip bottom>
+            <span>Deactivate this account</span>
+            <template v-slot:activator="{ on, attrs }">
+              <v-icon
+                  small
+                  class="mr-5"
+                  @click="deactivate(item)"
+                  v-bind="attrs"
+                  v-on="on"
+              >
+                fa-user-minus
+              </v-icon>
+            </template>
+          </v-tooltip>
+          <v-tooltip bottom>
+            <span>Update user's working limit</span>
+            <template v-slot:activator="{ on, attrs }">
+              <v-icon
+                  v-if="item['role']==='Staff'"
+                  small
+                  @click="changeWorkingLimitAction(item)"
+                  v-bind="attrs"
+                  v-on="on"
+              >
+                fa-pencil-alt
+              </v-icon>
+            </template>
+          </v-tooltip>
+
+
         </template>
       </v-data-table>
     </v-sheet>
@@ -40,7 +63,7 @@
 </template>
 
 <script>
-import {getAllManager, getAllStaff} from '@/api/user'
+import {deactivateUser, getAllManager, getAllStaff} from '@/api/user'
 import {updateWorkingLimit} from '@/api/staff'
 import NewAccountDialog from './NewAccountDialog'
 import dialogMessage from "@/utils/dialogMessage";
@@ -65,6 +88,9 @@ const headers = [
   {
     text: 'Working limit', value: 'workingLimit'
   },
+  {
+    text: 'Status', value: 'status'
+  },
   {text: 'Actions', value: 'actions', sortable: false},
 ]
 export default {
@@ -75,26 +101,29 @@ export default {
     let accounts = []
     await getAllManager().then((res) => {
       const data = res.data
-      const labels = ['phone', 'name', 'email', 'createdTime']
+      const labels = ['phone', 'name', 'email', 'createdTime', 'status']
       for (const manager of data) {
         let obj = {}
         for (const key of labels) {
           obj[key] = manager[key]
         }
         obj['role'] = "Manager"
+        obj['status'] = obj['status'] === 1 ? 'Active' : 'Inactive'
         obj['_id'] = manager['id']
         accounts.push(obj)
       }
     })
     await getAllStaff().then((res) => {
       const data = res.data
-      const labels = ['phone', 'name', 'email', 'createdTime', 'address', 'workingLimit']
+      const labels = ['phone', 'name', 'email', 'createdTime', 'address', 'workingLimit', 'status']
       for (const staff of data) {
         let obj = {}
         for (const key of labels) {
           obj[key] = staff[key]
         }
         obj['role'] = 'Staff'
+        console.log(obj['status'])
+        obj['status'] = obj['status'] === 1 ? 'Active' : 'Inactive'
         obj['_id'] = staff['id']
 
         accounts.push(obj)
@@ -152,7 +181,22 @@ export default {
         this.$alert(dialogMessage.alert.error.Common)
       })
 
-    }
+    },
+    deactivate(item) {
+      const param = {
+        id:  item['_id'],
+        role: item.role === 'Staff' ? 0 : 1
+      }
+      this.$confirm({
+        title: "Deactivate user?",
+        message: "Are you sure you want to deactivate the account?"
+
+      }).then(() => deactivateUser(param)).then(() => {
+        item['status'] = 'Inactive'
+        this.$alert("The account has been deactivate.")
+      })
+
+    },
   },
   computed: {}
 }

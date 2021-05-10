@@ -195,7 +195,7 @@ export default {
         endTime: endTimestamp,
 
       }
-      console.log({param})
+
 
       postFreeTime(param).then((res) => {
         if (res.code === 500) {

@@ -11,3 +11,7 @@ export async function updateStaffInfo(param) {
 export async function updateWorkingLimit(param) {
     return request.put('/api/working-limit', param)
 }
+
+export async function getWorkload(staffId) {
+    return request.get(`/api/staff/${staffId}/workload`)
+}

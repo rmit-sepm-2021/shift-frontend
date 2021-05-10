@@ -8,7 +8,6 @@
 
 <script>
 
-// import HelloWorld from './components/HelloWorld';
 import router from "./router/index.js";
 
 export default {

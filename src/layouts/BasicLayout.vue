@@ -43,6 +43,9 @@
           </v-list-item-content>
         </v-list-item>
         <v-list-item @click="logout">
+          <v-list-item-icon>
+            <v-icon>fa-sign-out-alt</v-icon>
+          </v-list-item-icon>
           <v-list-item-content>
             <v-list-item-title>Logout</v-list-item-title>
           </v-list-item-content>
@@ -88,23 +91,6 @@ import * as _ from 'lodash'
 
 export default {
   name: "BasicLayout",
-  components: {},
-  created() {
-    const {Login} = this
-    const loginParams = {
-      // email: "mask@test.com", password: "123456"
-      email: "test@qq.com", password: "Test!123"
-    }
-    //TODO start here
-    if (!auth.isLogged()) {
-
-      Login(loginParams).then((res) => {
-        console.log(res)
-        const data = res['data']
-        auth.setToken(data['token'])
-      })
-    }
-  },
   mounted() {
     // notification part
     if (this.role === "STAFF") {
@@ -168,10 +154,8 @@ export default {
   data: () => ({
     cards: ["Today", "Yesterday"],
     drawer: null,
-
     notification: {
       alert: false,
-      size: 0,
     },
   }),
   methods: {

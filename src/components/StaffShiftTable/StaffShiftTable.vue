@@ -28,7 +28,48 @@
           <v-dialog
               v-model="dialog"
               width="500"
-              v-if="item.status!=='Rejected'"
+              v-if="item.status==='Waiting for approval'"
+          >
+
+            <template v-slot:activator="{ on:dialog, attrs }">
+              <v-tooltip bottom>
+                <span>Reject your allocation</span>
+                <template v-slot:activator="{ on:tooltip }">
+                  <v-icon
+
+                      v-bind="attrs"
+                      v-on="{...tooltip,...dialog}"
+                  >
+                    fa-times
+                  </v-icon>
+                </template>
+              </v-tooltip>
+            </template>
+            <v-card>
+              <v-card-title class="headline  lighten-2">
+                Please input reject reason
+              </v-card-title>
+              <div class="pa-5">
+                <v-textarea outlined clearable label="Reason for rejection" v-model="reason"></v-textarea>
+              </div>
+              <v-divider></v-divider>
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn
+                    color="primary"
+                    text
+                    @click="handleReject(item)"
+                >
+                  Save
+                </v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
+<!--          Personal emeracy-->
+          <v-dialog
+              v-model="dialog"
+              width="500"
+              v-if="item.status==='Allocated'"
           >
 
             <template v-slot:activator="{ on:dialog, attrs }">
@@ -85,8 +126,8 @@
           </span>
       </template>
     </v-data-table>
+    <div id="myChart" :style="{width: '500px', height: '500px'}"></div>
   </div>
-
 </template>
 
 <script>
@@ -98,6 +139,7 @@ import {postMessage} from "@/api/message";
 import {mapState} from "vuex";
 import {generateAcceptHtml, generateRejectHtml} from "@/utils/message";
 import dialogMessage from "@/utils/dialogMessage";
+import {getWorkload} from "@/api/staff";
 
 const headers = [
   {
@@ -158,11 +200,15 @@ export default {
   name: "StaffShiftTable",
   async mounted() {
     //load data
-
+    getWorkload(this.id).then(r => {
+      const data = r.data
+      this.workload = data
+      this.setupWorkloadPie()
+    });
     getShiftListByStaffId(this.id).then((resp) => {
       const data = resp.data
       const historyData = []
-      this.shiftListData = ShiftListToTableData(data.filter(i=>i.statusStr==='Waiting for approval'||i.statusStr==='In progress'||i.statusStr==='Allocated'))
+      this.shiftListData = ShiftListToTableData(data.filter(i => i.statusStr === 'Waiting for approval' || i.statusStr === 'In progress' || i.statusStr === 'Allocated'))
       for (const datum of data) {
         if (datum.status !== "Allocated" && datum.status !== "In progress") {
           historyData.push(datum);
@@ -170,7 +216,6 @@ export default {
         this.shiftListData2 = ShiftListToTableData(historyData)
       }
     })
-
 
   },
   computed: {
@@ -183,12 +228,56 @@ export default {
       reason: '',
       headers,
       dialog: false,
+      workload: {
+        workload: 0,
+        workingLimit: 0,
+      },
       aheader,
       shiftListData: [],
       shiftListData2: [],
     }
   },
   methods: {
+    setupWorkloadPie() {
+      let myChart = this.$echarts.init(document.getElementById('myChart'));
+      myChart.setOption({
+        title: {
+          text: "Workload situation"
+        },
+        tooltip: {
+          trigger: 'item'
+        },
+        legend: {
+          top: '5%',
+          left: 'center'
+        },
+        series: [
+          {
+            name: 'Workload',
+            type: 'pie',
+            radius: ['20%', '60%'],
+            avoidLabelOverlap: true,
+            itemStyle: {
+              borderRadius: 10,
+              borderColor: '#fff',
+              borderWidth: 2
+            },
+            label: {
+              show: false,
+              position: 'center',
+
+            },
+            labelLine: {
+              show: false
+            },
+            data: [
+              {value: this.workload.workload, name: 'Current Workload'},
+              {value: this.workload.workingLimit - this.workload.workload, name: 'Remaining Workload'},
+            ]
+          }
+        ]
+      });
+    },
     async handleAccept(item) {
       let failed = false
       console.log(item)
@@ -234,7 +323,7 @@ export default {
         id: item.id,
         reason: this.reason
       }
-      console.log({param})
+
       if (!confirm("Are you sure you want to submit the reason to rejection")) {
         return
       }
