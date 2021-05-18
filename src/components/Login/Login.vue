@@ -49,7 +49,7 @@
 
                           v-model="email"
                           :rules="emailRules"
-                          :counter="10"
+
                           label="E-mail"
                           required
                       ></v-text-field>
@@ -103,8 +103,8 @@ export default {
       loginAlert: false,
       validateAlert: false,
       valid: true,
-      email: 'mask@test.com',
-      password: '123456',
+      email: '',
+      password: '',
       passwordRules: [
         v => !!v || 'Password is required',
         // v => /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!$*&+?])[A-Za-z\d!$*&+?]{8,}$/.test(v) || 'Password must be valid'
@@ -134,13 +134,18 @@ export default {
       Login(loginParams).then((res) => {
         console.log(res)
         const data = res.data
-        this.loginAlert = !this.loginAlert
+        if (res.code !== 200) {
+          this.$alert(res.message);
+        } else {
+          this.loginAlert = !this.loginAlert
+          auth.setToken(data['token'])
+          setTimeout(() => {
+            this.$router.push('/')
+          }, 1000)
+        }
 
-        auth.setToken(data['token'])
-        setTimeout(() => {
-          this.$router.push('/')
-        }, 1000)
-      }).catch(() => {
+      }).catch((res) => {
+        console.log(res)
         this.$alert(dialogMessage.alert.error.Common)
       })
     },

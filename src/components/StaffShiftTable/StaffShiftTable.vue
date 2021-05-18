@@ -1,132 +1,152 @@
 <template>
   <div class="pa-5">
-    <v-sheet tile class="d-flex ">
-
-    </v-sheet>
-    <v-sheet>
-      <v-data-table
-          :headers="headers"
-          :items="shiftListData"
-          :items-per-page="20"
-          class="elevation-1"
-      >
-        <template v-slot:item.actions="{ item }">
-          <v-tooltip bottom>
-            <span>Accept your allocation</span>
-            <template v-slot:activator="{ on, attrs }">
-              <v-icon
-                  v-if="item['status']==='Waiting for approval'"
-                  class="mr-4"
-                  @click="handleAccept(item)"
-                  v-bind="attrs"
-                  v-on="on"
-              >
-                fa-check
-              </v-icon>
-            </template>
-          </v-tooltip>
-          <v-dialog
-              v-model="dialog"
-              width="500"
-              v-if="item.status==='Waiting for approval'"
-          >
-
-            <template v-slot:activator="{ on:dialog, attrs }">
-              <v-tooltip bottom>
-                <span>Reject your allocation</span>
-                <template v-slot:activator="{ on:tooltip }">
-                  <v-icon
-
-                      v-bind="attrs"
-                      v-on="{...tooltip,...dialog}"
-                  >
-                    fa-times
-                  </v-icon>
-                </template>
-              </v-tooltip>
-            </template>
-            <v-card>
-              <v-card-title class="headline  lighten-2">
-                Please input reject reason
-              </v-card-title>
-              <div class="pa-5">
-                <v-textarea outlined clearable label="Reason for rejection" v-model="reason"></v-textarea>
-              </div>
-              <v-divider></v-divider>
-              <v-card-actions>
-                <v-spacer></v-spacer>
-                <v-btn
-                    color="primary"
-                    text
-                    @click="handleReject(item)"
-                >
-                  Save
-                </v-btn>
-              </v-card-actions>
-            </v-card>
-          </v-dialog>
-<!--          Personal emeracy-->
-          <v-dialog
-              v-model="dialog"
-              width="500"
-              v-if="item.status==='Allocated'"
-          >
-
-            <template v-slot:activator="{ on:dialog, attrs }">
-              <v-tooltip bottom>
-                <span>Reject your allocation</span>
-                <template v-slot:activator="{ on:tooltip }">
-                  <v-icon
-
-                      v-bind="attrs"
-                      v-on="{...tooltip,...dialog}"
-                  >
-                    fa-times
-                  </v-icon>
-                </template>
-              </v-tooltip>
-            </template>
-            <v-card>
-              <v-card-title class="headline  lighten-2">
-                Please input reject reason
-              </v-card-title>
-              <div class="pa-5">
-                <v-textarea outlined clearable label="Reason for rejection" v-model="reason"></v-textarea>
-              </div>
-              <v-divider></v-divider>
-              <v-card-actions>
-                <v-spacer></v-spacer>
-                <v-btn
-                    color="primary"
-                    text
-                    @click="handleReject(item)"
-                >
-                  Save
-                </v-btn>
-              </v-card-actions>
-            </v-card>
-          </v-dialog>
-        </template>
-        <template v-slot:item.status="{ item }">
-          <span class="red--text">{{ item.status }}
-          </span>
-        </template>
-      </v-data-table>
-    </v-sheet>
-    <p>History</p>
     <v-data-table
-        :headers="aheader"
-        :items="shiftListData2"
+        :headers="headers"
+        :items="shiftListData"
         :items-per-page="20"
         class="elevation-1"
     >
+      <template v-slot:top>
+        <v-toolbar
+            flat
+        >
+          <v-toolbar-title>Current shifts</v-toolbar-title>
+          <v-divider
+              class="mx-4"
+              inset
+              vertical
+          ></v-divider>
+        </v-toolbar>
+      </template>
+      <template v-slot:item.actions="{ item }">
+        <v-tooltip bottom>
+          <span>Accept your allocation</span>
+          <template v-slot:activator="{ on, attrs }">
+            <v-icon
+                v-if="item['status']==='Waiting for approval'"
+                class="mr-4"
+                @click="handleAccept(item)"
+                v-bind="attrs"
+                v-on="on"
+            >
+              fa-check
+            </v-icon>
+          </template>
+        </v-tooltip>
+        <v-dialog
+            v-model="dialog"
+            width="500"
+            v-if="item.status==='Waiting for approval'"
+        >
 
+          <template v-slot:activator="{ on:dialog, attrs }">
+            <v-tooltip bottom>
+              <span>Reject your allocation</span>
+              <template v-slot:activator="{ on:tooltip }">
+                <v-icon
+
+                    v-bind="attrs"
+                    v-on="{...tooltip,...dialog}"
+                >
+                  fa-times
+                </v-icon>
+              </template>
+            </v-tooltip>
+          </template>
+          <v-card>
+            <v-card-title class="headline  lighten-2">
+              Please input reject reason
+            </v-card-title>
+            <div class="pa-5">
+              <v-textarea outlined clearable label="Reason for rejection" v-model="reason"></v-textarea>
+            </div>
+            <v-divider></v-divider>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn
+                  color="primary"
+                  text
+                  @click="handleReject(item)"
+              >
+                Save
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+        <!--          Personal emeracy-->
+        <v-dialog
+            v-model="dialog"
+            width="500"
+            v-if="item.status==='Allocated'"
+        >
+
+          <template v-slot:activator="{ on:dialog, attrs }">
+            <v-tooltip bottom>
+              <span>Cancel your allocation</span>
+              <template v-slot:activator="{ on:tooltip }">
+                <v-btn color="error">
+                  <v-icon
+
+                      v-bind="attrs"
+                      v-on="{...tooltip,...dialog}"
+                  >
+                    fa-times
+                  </v-icon>
+                </v-btn>
+              </template>
+            </v-tooltip>
+          </template>
+          <v-card>
+            <v-card-title class="headline  lighten-2">
+              Please input cancel allocation reason
+            </v-card-title>
+            <div class="pa-5">
+              <v-textarea outlined clearable label="Reason for cancel" v-model="reason"></v-textarea>
+            </div>
+            <v-divider></v-divider>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn
+                  color="primary"
+                  text
+                  @click="handleCancel(item)"
+              >
+                Save
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+      </template>
       <template v-slot:item.status="{ item }">
           <span class="red--text">{{ item.status }}
           </span>
       </template>
     </v-data-table>
-    <div id="myChart" :style="{width: '500px', height: '500px'}"></div>
+
+    <v-data-table
+        :headers="aheader"
+        :items="shiftListData2"
+        :items-per-page="20"
+        class="elevation-1 mt-16"
+    >
+      <template v-slot:top>
+        <v-toolbar
+            flat
+        >
+          <v-toolbar-title>History shifts</v-toolbar-title>
+          <v-divider
+              class="mx-4"
+              inset
+              vertical
+          ></v-divider>
+        </v-toolbar>
+      </template>
+      <template v-slot:item.status="{ item }">
+          <span class="red--text">{{ item.status }}
+          </span>
+      </template>
+    </v-data-table>
+    <div id="myChart" :style="{width: '300px', height: '400px'}"></div>
   </div>
 </template>
 
@@ -137,11 +157,12 @@ import {acceptAllocation, getShiftListByStaffId, rejectAllocation} from "@/api/s
 import {ShiftListToTableData} from "@/utils/shift"
 import {postMessage} from "@/api/message";
 import {mapState} from "vuex";
-import {generateAcceptHtml, generateRejectHtml} from "@/utils/message";
+import {generateAcceptHtml, generateCancelHtml, generateRejectHtml} from "@/utils/message";
 import dialogMessage from "@/utils/dialogMessage";
 import {getWorkload} from "@/api/staff";
 
-const headers = [
+
+const historyHeader = [
   {
     text: 'Title', value: 'title'
   },
@@ -149,7 +170,9 @@ const headers = [
   {
     text: 'Manager', value: 'managerName'
   },
-
+  {
+    text: 'Created time', value: 'createdTime'
+  },
   {
     text: 'Start time', value: 'startTime'
   },
@@ -168,41 +191,20 @@ const headers = [
   {
     text: 'Created time', value: 'createdTime'
   },
-  {text: 'Actions', value: 'actions', sortable: false},
+
 ]
+const headers = [
+  ...historyHeader,
 
-const aheader = [
-  {
-    text: 'Title', value: 'title'
-  },
 
-  {
-    text: 'Manager', value: 'managerName'
-  },
-  {
-    text: 'Created time', value: 'createdTime'
-  },
-  {
-    text: 'Start time', value: 'startTime'
-  },
-  {
-    text: 'End time', value: 'endTime'
-  },
-  {
-    text: 'Location', value: 'location'
-  },
-  {
-    text: 'Description', value: 'description'
-  },
-
+  {text: 'Actions', value: 'actions', sortable: false},
 ]
 export default {
   name: "StaffShiftTable",
   async mounted() {
     //load data
     getWorkload(this.id).then(r => {
-      const data = r.data
-      this.workload = data
+      this.workload = r.data
       this.setupWorkloadPie()
     });
     getShiftListByStaffId(this.id).then((resp) => {
@@ -232,7 +234,7 @@ export default {
         workload: 0,
         workingLimit: 0,
       },
-      aheader,
+      aheader: historyHeader,
       shiftListData: [],
       shiftListData2: [],
     }
@@ -278,38 +280,40 @@ export default {
         ]
       });
     },
-    async handleAccept(item) {
+    handleAccept(item) {
       let failed = false
       console.log(item)
-      if (!confirm("Are you sure you want to accept the allocation?")) {
-        return
-      }
-      const param = {
-        id: item.id
-      }
-      await acceptAllocation(param).then(r => {
-        console.log(r)
-        this.$alert(dialogMessage.alert.success.AcceptAllocation)
-        item.status = "Allocated"
-      }).catch(r => {
-        console.log(r)
-        this.$alert(dialogMessage.alert.error.Common)
-      })
-      if (failed) {
-        return
-      }
-      const param2 =
-          {
-            "senderId": item.staffId,
-            "receiverId": item.managerId,
-            "content": generateAcceptHtml(item),
-            "type": 1,
-            "senderRole": 0
-          }
-      await postMessage(param2).then(r => {
-        console.log(r)
-      }).catch(r => {
-        console.log(r)
+      this.$confirm({
+        title: "Confirm Allocation",
+        message: "Are you sure you want to accept this allocation?"
+      }).then(async () => {
+        const param = {
+          id: item.id
+        }
+        await acceptAllocation(param).then(r => {
+          console.log(r)
+          this.$alert(dialogMessage.alert.success.AcceptAllocation)
+          item.status = "Allocated"
+        }).catch(r => {
+          console.log(r)
+          this.$alert(dialogMessage.alert.error.Common)
+        })
+        if (failed) {
+          return
+        }
+        const param2 =
+            {
+              "senderId": item.staffId,
+              "receiverId": item.managerId,
+              "content": generateAcceptHtml(item),
+              "type": 1,
+              "senderRole": 0
+            }
+        await postMessage(param2).then(r => {
+          console.log(r)
+        }).catch(r => {
+          console.log(r)
+        })
       })
 
 
@@ -324,30 +328,68 @@ export default {
         reason: this.reason
       }
 
-      if (!confirm("Are you sure you want to submit the reason to rejection")) {
-        return
-      }
-      rejectAllocation(param).then(r => {
-        console.log(r)
-        const param = {
-          "senderId": item.staffId,
-          "receiverId": item.managerId,
-          "content": generateRejectHtml(item, this.reason),
-          "type": 2,
-          "senderRole": 0
-        }
-        item.status = "Rejected"
-        postMessage(param).then(r => {
+      this.$confirm({
+        title: "Reject Allocation",
+        message: "Are you sure you want to reject the allocation?"
+      }).then(() => {
+        rejectAllocation(param).then(r => {
           console.log(r)
+          const param = {
+            "senderId": item.staffId,
+            "receiverId": item.managerId,
+            "content": generateRejectHtml(item, this.reason),
+            "type": 2,
+            "senderRole": 0
+          }
+          item.status = "Rejected"
+          postMessage(param).then(r => {
+            console.log(r)
+          }).catch(r => {
+            console.log(r)
+          })
+          this.dialog = false
         }).catch(r => {
           console.log(r)
+          this.$alert(dialogMessage.alert.error.Common)
+          this.dialog = false
         })
-        this.dialog = false
-      }).catch(r => {
-        console.log(r)
-        this.$alert(dialogMessage.alert.error.Common)
-        this.dialog = false
       })
+
+    },
+    handleCancel(item) {
+
+      const param = {
+        id: item.id,
+        reason: this.reason
+      }
+
+      this.$confirm({
+        title: "Cancel Allocation",
+        message: "Are you sure you want to cancel this allocation?"
+      }).then(() => {
+        rejectAllocation(param).then(r => {
+          console.log(r)
+          const param = {
+            "senderId": item.staffId,
+            "receiverId": item.managerId,
+            "content": generateCancelHtml(item, this.reason),
+            "type": 3,
+            "senderRole": 0
+          }
+          item.status = "Canceled"
+          postMessage(param).then(r => {
+            console.log(r)
+          }).catch(r => {
+            console.log(r)
+          })
+          this.dialog = false
+        }).catch(r => {
+          console.log(r)
+          this.$alert(dialogMessage.alert.error.Common)
+          this.dialog = false
+        })
+      })
+
     }
   }
 }

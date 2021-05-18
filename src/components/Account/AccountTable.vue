@@ -154,37 +154,40 @@ export default {
       this.form.workingLimit = item['workingLimit']
     },
     changeWorkingLimit() {
-      if (!confirm("Are you sure you want to change working limit?")) {
-        return
-      }
-      const param = {staffId: this.form.id, workingLimit: this.form.workingLimit}
-      if (this.form.workingLimit > 120) {
-        this.$alert(dialogMessage.alert.error.LargeWorkingLimit)
-        return;
-      }
-      updateWorkingLimit(param).then((resp) => {
-        if (resp.code !== 200) {
-          this.$alert(dialogMessage.alert.error.UpdateWorkingLimit)
-          return
+      this.$confirm({
+        title: "Update Working Limit",
+        message: "Are you sure you want to change working limit?"
+      }).then(() => {
+        const param = {staffId: this.form.id, workingLimit: this.form.workingLimit}
+        if (this.form.workingLimit > 120) {
+          this.$alert(dialogMessage.alert.error.LargeWorkingLimit)
+          return;
         }
-        this.$alert(dialogMessage.alert.success.ChangeWorkingLimit)
-
-        for (const item of this.accounts) {
-          if (item['_id'] === this.form.id && item['role'] === 'Staff') {
-            item['workingLimit'] = this.form.workingLimit
-            break
+        updateWorkingLimit(param).then((resp) => {
+          if (resp.code !== 200) {
+            this.$alert(dialogMessage.alert.error.UpdateWorkingLimit)
+            return
           }
-        }
-        this.dialogFormVisible = false
-        // window.location.reload()
-      }).catch(() => {
-        this.$alert(dialogMessage.alert.error.Common)
+          this.$alert(dialogMessage.alert.success.ChangeWorkingLimit)
+
+          for (const item of this.accounts) {
+            if (item['_id'] === this.form.id && item['role'] === 'Staff') {
+              item['workingLimit'] = this.form.workingLimit
+              break
+            }
+          }
+          this.dialogFormVisible = false
+          // window.location.reload()
+        }).catch(() => {
+          this.$alert(dialogMessage.alert.error.Common)
+        })
+
       })
 
     },
     deactivate(item) {
       const param = {
-        id:  item['_id'],
+        id: item['_id'],
         role: item.role === 'Staff' ? 0 : 1
       }
       this.$confirm({

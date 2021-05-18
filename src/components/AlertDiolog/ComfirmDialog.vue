@@ -4,7 +4,6 @@
       v-model="content.show"
       width="500"
       :dark="isDark"
-      transition="dialog-top-transition"
   >
     <v-card>
       <v-card-title class="headline  lighten-2">

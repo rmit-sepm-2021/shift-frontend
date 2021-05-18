@@ -1,7 +1,7 @@
 <template>
   <div class="pa-5">
     <v-sheet tile class="d-flex">
-      <CreateShift btn-color="primary"></CreateShift>
+
     </v-sheet>
     <v-sheet>
       <v-data-table
@@ -10,10 +10,22 @@
           :items-per-page="20"
           class="elevation-1"
       >
+        <template v-slot:top>
+          <v-toolbar
+              flat
+          >
+            <v-toolbar-title>Shifts</v-toolbar-title>
+            <v-divider
+                class="mx-4"
+                inset
+                vertical
+            ></v-divider>
+            <CreateShift btn-color="primary"></CreateShift>
+          </v-toolbar>
+        </template>
         <template v-slot:item.actions="{ item }">
           <v-toolbar-items class="d-flex justify-center">
             <template v-if="item.status==='Not allocated'">
-
               <v-tooltip bottom>
                 <span>Allocate this shift</span>
                 <template v-slot:activator="{ on, attrs }">
@@ -50,7 +62,7 @@
         </template>
       </v-data-table>
     </v-sheet>
-    <div id="main" :style="{width: '300px', height: '300px'}"></div>
+    <div id="main" :style="{width: '300px', height: '350px'}"></div>
   </div>
 
 </template>
@@ -58,11 +70,11 @@
 <script>
 import {deleteShift, getShiftList} from "@/api/shift";
 import CreateShift from "@/components/CreateShiftDialog/CreateShiftDialog";
-
-
+import {getAllStaff} from "@/api/user"
 import {ShiftListToTableData} from "@/utils/shift"
 import AllocateShiftDialog from "@/components/AllocateShiftDialog/AllocateShiftDialog";
 import dialogMessage from "@/utils/dialogMessage";
+import {getWorkload} from "@/api/staff";
 
 const headers = [
   {
@@ -100,49 +112,68 @@ export default {
   components: {CreateShift, AllocateShiftDialog},
   async mounted() {
 
-// 基于准备好的dom，初始化echarts实例
-    var myChart = this.$echarts.init(document.getElementById('main'));
-// 绘制图表
-    myChart.setOption({
-      tooltip: {
-        trigger: 'item'
-      },
-      legend: {
-        top: '5%',
-        left: 'center'
-      },
-      series: [
-        {
-          name: 'Workload',
-          type: 'pie',
-          radius: ['40%', '70%'],
-          avoidLabelOverlap: true,
-          itemStyle: {
-            borderRadius: 10,
-            borderColor: '#fff',
-            borderWidth: 2
-          },
-          label: {
-            show: false,
-            position: 'center'
-          },
 
-          labelLine: {
-            show: false
-          },
-          data: [
-            {value: 8, name: 'Current Workload'},
-            {value: 112, name: 'Remaining Workload'},
-          ]
-        }
-      ]
-    });
     //load data
-    getShiftList().then((resp) => {
+    let staffIdList = []
+    // let allWorkload = 0
+    // let allWorkLimit = 0
+    await getShiftList().then((resp) => {
       const data = resp.data
       this.rawData = data
+      for (const datum of data) {
+        staffIdList.push(datum['staffId'])
+      }
       this.shiftListData = ShiftListToTableData(data)
     })
+    await getAllStaff().then(res => {
+      const data = res.data
+      return data
+    }).then(data => {
+      for (const datum of data) {
+        getWorkload(datum['id']).then(res => {
+          const data = res.data
+          this.workload.workload += data['workload']
+          this.workload.workingLimit += data['workingLimit']
+          let myChart = this.$echarts.init(document.getElementById('main'));
+          myChart.setOption({
+            tooltip: {
+              trigger: 'item'
+            },
+            legend: {
+              top: '5%',
+              left: 'center'
+            },
+            series: [
+              {
+                name: 'Workload',
+                type: 'pie',
+                radius: ['40%', '70%'],
+                avoidLabelOverlap: true,
+                itemStyle: {
+                  borderRadius: 10,
+                  borderColor: '#fff',
+                  borderWidth: 2
+                },
+                label: {
+                  show: false,
+                  position: 'center'
+                },
+
+                labelLine: {
+                  show: false
+                },
+                data: [
+                  {value: this.workload.workload, name: 'Current All Staff Workload'},
+                  {value: this.workload.workingLimit, name: 'Remaining All Staff Workload'},
+                ]
+              }
+            ]
+          });
+
+        })
+      }
+    })
+
 
   },
   data() {
@@ -151,6 +182,10 @@ export default {
       shiftListData: [],
       dialog: false,
       rawData: [],
+      workload: {
+        workload: 0,
+        workingLimit: 0,
+      }
     }
   },
   methods: {

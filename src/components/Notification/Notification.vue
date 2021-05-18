@@ -123,7 +123,7 @@ const toItem = (data) => {
     console.log()
     let title = ''
     if (i['type'] === 1) {
-      title = 'You received a accept allocation message'
+      title = 'You received an accept allocation message'
     } else if (i['type'] === 2) {
       title = 'You received a reject allocation message'
     } else {
@@ -184,14 +184,16 @@ export default {
   methods: {
     ...mapMutations(['SIZE_DECREMENT']),
     changeMessageType() {
-      console.log(this.rawData.filter(i => !i['isRead']))
 
+      if (this.items === []) {
+        this.items = this.rawData
+      }
       if (this.type === 'Unread') {
-        this.items = toItem(this.rawData.filter(i => !i['isRead']))
+        this.items = toItem(this.items.filter(i => !i['isRead']))
       } else if (this.type === 'Read') {
-        this.items = toItem(this.rawData.filter(i => i['isRead']))
+        this.items = toItem(this.items.filter(i => i['isRead']))
       } else {
-        this.items = toItem(this.rawData)
+        this.items = toItem(this.items)
       }
 
     },

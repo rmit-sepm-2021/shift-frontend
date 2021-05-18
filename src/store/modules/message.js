@@ -11,7 +11,10 @@ const user = {
             state.size = size
         },
         SIZE_DECREMENT: (state) => {
-            state.size = state.size - 1
+            if (state.size > 0) {
+                state.size = state.size - 1
+            }
+
         },
     },
     actions: {},

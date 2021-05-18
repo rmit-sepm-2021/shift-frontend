@@ -14,21 +14,7 @@
       </v-sheet>
       <v-divider></v-divider>
       <v-list>
-        <template v-if="isManager">
-          <v-list-item @click="switchToStaff">
-            <v-list-item-content>
-              <v-list-item-title>Switch to Staff</v-list-item-title>
 
-            </v-list-item-content>
-          </v-list-item>
-        </template>
-        <template v-else>
-          <v-list-item @click="switchToManager">
-            <v-list-item-content>
-              <v-list-item-title>Switch to Manager</v-list-item-title>
-            </v-list-item-content>
-          </v-list-item>
-        </template>
 
         <v-list-item v-for="[icon, text,path] in SideBarLink" :key="text" link :to="path">
 
@@ -169,6 +155,8 @@ export default {
         this.notification.alert = true
         this.SET_SIZE(unreadData.length)
         this.notification.size = unreadData.length
+      } else {
+        this.SET_SIZE(unreadData.length)
       }
     },
     loginAsStaff() {

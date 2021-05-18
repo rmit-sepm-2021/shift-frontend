@@ -2,7 +2,7 @@
   <v-dialog
       v-model="show"
       width="500"
-      transition="dialog-top-transition"
+
   >
     <v-card>
       <v-card-title>
