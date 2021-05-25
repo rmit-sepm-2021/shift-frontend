@@ -241,13 +241,17 @@ export default {
     },
     submitNewPassword() {
       if (this.form.password !== this.info.password) {
-        this.$alert(`Old password is not correct${this.form.password}.${this.info.password}`)
+        this.$alert(`Old password is not correct.`)
         return
       }
 
       if (this.form.newPassword !== this.form.confirmPassword) {
         this.$alert("New password is not same as confirm password.")
         return
+      }
+      const isValid=this.validate()
+      if(!isValid){
+        this.$alert("The form is not valid.")
       }
       const param = {
         id: this.id,

@@ -149,8 +149,12 @@ const aheader = [
   {
     text: 'Location', value: 'location'
   },
+
   {
     text: 'Description', value: 'description'
+  },
+  {
+    text: 'Status', value: 'status'
   },
 
 ]

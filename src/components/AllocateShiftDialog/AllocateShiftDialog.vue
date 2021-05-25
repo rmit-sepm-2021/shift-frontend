@@ -19,6 +19,7 @@
                   persistent-hint
                   return-object
                   single-line
+
               ></v-select>
             </v-col>
           </v-row>
@@ -97,6 +98,15 @@ export default {
       this.$emit('change', false)
     },
     handleConfirm() {
+      if (this.item.length === 0) {
+        this.$alert("There is no available staff.")
+        return
+      }
+
+      if (typeof (this.select.value) !== 'number') {
+        this.$alert("Please select a staff.")
+        return
+      }
       const staffId = this.select.value
       const shiftId = this.shiftId
       const allocateParam = {

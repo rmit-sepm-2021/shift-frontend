@@ -178,9 +178,9 @@ export default {
       }))
       if (unreadData.length !== 0) {
         this.notification.alert = true
-        this.SET_SIZE(unreadData.length)
-        this.notification.size = unreadData.length
       }
+      this.SET_SIZE(unreadData.length)
+      this.notification.size = unreadData.length
     },
     loginAsStaff() {
       const {Login} = this
