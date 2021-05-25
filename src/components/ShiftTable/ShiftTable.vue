@@ -95,7 +95,7 @@ export default {
         return
       }
       deleteShift(item.id).then(() => {
-        alert("Deleted Successfully")
+        alert("The shift has been deleted.")
         window.location.reload()
       }).catch(() => {
         alert("Something wrong")

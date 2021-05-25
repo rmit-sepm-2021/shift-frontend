@@ -70,8 +70,10 @@ export default {
       loginAlert: false,
       validateAlert: false,
       valid: true,
-      email: 'mask@test.com',
-      password: '123456',
+      // email: 'mask@test.com',
+      // password: '123456',
+      email: '',
+      password: '',
 
       passwordRules: [
         v => !!v || 'Password is required',
