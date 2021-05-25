@@ -172,7 +172,7 @@ export default {
     allowedStartDates(date) {
       const mDate = moment(date, "YYYY-MM-DD")
       const date2w = moment().add(2, 'week')
-      return mDate.isBetween(moment(), date2w) || mDate.isSame(moment())
+      return mDate.isBetween(moment().add(-1,'day'), date2w,null,"[]")
     },
     allowedMinutes: v => v % 30 === 0,
     handleSelectFreeTime() {
@@ -180,7 +180,7 @@ export default {
       const endDateTime = this.endDate + " " + this.endTime
       const startTimestamp = moment(startDateTime).valueOf()
       const endTimestamp = moment(endDateTime).valueOf()
-      if (startTimestamp > endTimestamp) {
+      if (startTimestamp >= endTimestamp) {
         alert("Please select a correct end date time")
         return
       }
@@ -196,6 +196,7 @@ export default {
         if (res.code === 500) {
           alert("Add available time failed. Time may be overlap")
         } else {
+          alert("An available time has been added.")
           window.location.reload()
         }
 
