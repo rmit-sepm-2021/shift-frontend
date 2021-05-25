@@ -168,7 +168,7 @@ export default {
       const historyData = []
       this.shiftListData = ShiftListToTableData(data.filter(i=>i.statusStr==='Waiting for approval'||i.statusStr==='In progress'||i.statusStr==='Allocated'))
       for (const datum of data) {
-        if (datum.status !== "Allocated" && datum.status !== "In progress") {
+        if (datum.status !== "Allocated" && datum.status !== "In progress"&& datum.status !== "Waiting for approval") {
           historyData.push(datum);
         }
         this.shiftListData2 = ShiftListToTableData(historyData)
