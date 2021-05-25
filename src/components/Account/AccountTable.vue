@@ -13,22 +13,22 @@
           class="elevation-1"
       >
 
-        <template v-slot:item.actions="{ item }">
-          <v-tooltip bottom>
-            <span>Update user's working limit</span>
-            <template v-slot:activator="{ on, attrs }">
-              <v-icon
-                  v-if="item['role']==='Staff'"
-                  small
-                  @click="changeWorkingLimitAction(item)"
-                  v-bind="attrs"
-                  v-on="on"
-              >
-                fa-pencil-alt
-              </v-icon>
-            </template>
-          </v-tooltip>
-        </template>
+<!--        <template v-slot:item.actions="{ item }">-->
+<!--          <v-tooltip bottom>-->
+<!--            <span>Update user's working limit</span>-->
+<!--            <template v-slot:activator="{ on, attrs }">-->
+<!--              <v-icon-->
+<!--                  v-if="item['role']==='Staff'"-->
+<!--                  small-->
+<!--                  @click="changeWorkingLimitAction(item)"-->
+<!--                  v-bind="attrs"-->
+<!--                  v-on="on"-->
+<!--              >-->
+<!--                fa-pencil-alt-->
+<!--              </v-icon>-->
+<!--            </template>-->
+<!--          </v-tooltip>-->
+<!--        </template>-->
       </v-data-table>
     </v-sheet>
     <el-dialog :title="form.title" :visible.sync="dialogFormVisible">
