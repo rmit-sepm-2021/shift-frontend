@@ -12,21 +12,30 @@
           :items-per-page="20"
           class="elevation-1"
       >
+
         <template v-slot:item.actions="{ item }">
-          <v-icon
-              v-if="item['role']==='Staff'"
-              small
-              @click="changeWorkingLimitAction(item)"
-          >
-            fa-pencil-alt
-          </v-icon>
+          <v-tooltip bottom>
+            <span>Update user's working limit</span>
+            <template v-slot:activator="{ on, attrs }">
+              <v-icon
+                  v-if="item['role']==='Staff'"
+                  small
+                  @click="changeWorkingLimitAction(item)"
+                  v-bind="attrs"
+                  v-on="on"
+              >
+                fa-pencil-alt
+              </v-icon>
+            </template>
+          </v-tooltip>
         </template>
       </v-data-table>
     </v-sheet>
     <el-dialog :title="form.title" :visible.sync="dialogFormVisible">
       <el-form :model="form">
         <el-form-item label="New working limit (hours)">
-          <el-input v-model="form.workingLimit" autocomplete="off"></el-input>
+          <el-input v-model="form.workingLimit" autocomplete="off" type="number" onkeyup= "if(! /^d+$/.test(this.value)){alert('Please input an integer');this.value='';}"
+          ></el-input>
         </el-form-item>
 
       </el-form>
@@ -129,9 +138,10 @@ export default {
       }
       const param = {staffId: this.form.id, workingLimit: this.form.workingLimit}
       if (this.form.workingLimit > 120) {
-        alert("Please input a valid working limit")
+        alert("Working limit should be smaller than 120 hours.")
         return;
       }
+
       updateWorkingLimit(param).then((resp) => {
         if (resp.code !== 200) {
           alert("Current workload hours is greater than new working limit. Update failed!")

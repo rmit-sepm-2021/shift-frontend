@@ -114,6 +114,7 @@
                           label="Duration (hours)"
                           required
                           max="10"
+                          onkeyup= "if(! /^d+$/.test(this.value)){alert('Please input an integer');this.value='';}"
                       ></v-text-field>
 
                     </v-col>

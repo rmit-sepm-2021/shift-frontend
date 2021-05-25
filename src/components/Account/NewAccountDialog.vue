@@ -23,7 +23,7 @@
           <v-form
               ref="form"
               v-model="valid"
-              lazy-validation
+
           >
             <v-select
                 v-model="role"
@@ -80,6 +80,8 @@
                   :rules="[v => !!v || 'Working limit is required']"
                   label="Working Limit (hours)"
                   required
+                  type="number"
+                  onkeyup= "if(! /^d+$/.test(this.value)){alert('Please input an integer');this.value='';}"
               ></v-text-field>
             </template>
             <v-btn
@@ -120,8 +122,8 @@ import {mapState} from "vuex";
 
 const passwordHint = "Passwords should be exactly 8 characters, including upper and lower case letters, digits and at least one special character \n" +
     "out of !, $, *, &, +, ?"
-let Mock = require('mockjs')
-let Random = Mock.Random
+// let Mock = require('mockjs')
+// let Random = Mock.Random
 export default {
   name: "NewAccountDialog",
   data: () => ({
@@ -137,22 +139,22 @@ export default {
     formTitle: "Create a new account",
 
     //  formdata
-    name: Random.name(),
-    email: Random.email(),
-    password: 'Test!123',
-    rePassword: "Test!123",
-    address: "an address",
-    role: "staff",
-    workingLimit: 120,
-    phone: "996",
     // name: Random.name(),
-    // email: "",
-    // password: "",
-    // rePassword: "",
-    // address: "",
+    // email: Random.email(),
+    // password: 'Test!123',
+    // rePassword: "Test!123",
+    // address: "an address",
     // role: "staff",
     // workingLimit: 120,
-    // phone: "",
+    // phone: "996",
+    name: "",
+    email: "",
+    password: "",
+    rePassword: "",
+    address: "",
+    role: "staff",
+    workingLimit: 40,
+    phone: "",
     passwordRules: [
       v => !!v || 'Password is required',
       v => /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!$*&+?])[A-Za-z\d!$*&+?]{8,}$/.test(v) || 'Password must be valid. ' + passwordHint,
@@ -173,6 +175,9 @@ export default {
     save() {
       const isValid = this.$refs.form.validate()
 
+      if (!isValid) {
+        alert("The form is not valid.")
+      }
       if (isValid) {
         const {
           name,
@@ -199,7 +204,7 @@ export default {
           console.log(param)
           createStaff(param).then(res => {
             if (res.code === 200) {
-              alert("Add an account successfully!")
+              alert("The new account has been created.")
             }
             this.dialog = false
             window.location.reload()
@@ -208,7 +213,7 @@ export default {
           console.log(param)
           createManager(param).then(res => {
             if (res.code === 200) {
-              alert("Add an account successfully!")
+              alert("The new account has been created.")
             }
             window.location.reload()
             this.dialog = false
@@ -219,12 +224,9 @@ export default {
 
         } else {
           alert("Please select a role")
-          return;
         }
       }
 
-      // alert("Check, check, check!")
-      this.$refs.form.resetValidation()
     },
     close() {
       this.dialog = false
