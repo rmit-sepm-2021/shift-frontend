@@ -89,7 +89,17 @@
         </template>
 
 
+        <v-list-item>
 
+          <div class="ml-auto">
+            <v-btn @click="update=true" color="primary" v-if="!update">Update information</v-btn>
+            <template v-else>
+              <v-btn class="mr-auto" text color="primary" @click="update=false">Cancel</v-btn>
+              <v-btn color="primary" @click="submitNewInfo">Save</v-btn>
+            </template>
+          </div>
+
+        </v-list-item>
       </v-form>
     </v-list>
 
