@@ -55,7 +55,7 @@
                         <template v-slot:activator="{ on, attrs }">
                           <v-text-field
                               v-model="startTime"
-                              label="Pick an start time"
+                              label="Pick a start time"
                               prepend-icon="mdi-clock-time-four-outline"
                               readonly
                               v-bind="attrs"
@@ -207,9 +207,9 @@ export default {
     startDateMenu: false,
     location: "",
     locations: [],
-    title: "A title",
+    title: "",
     duration: 4,
-    description: "no 996",
+    description: "",
     valid: true,
     TimeRules: [
       v => !!v || 'Time is required',
@@ -231,7 +231,7 @@ export default {
     allowedStartDates(date) {
       const mDate = moment(date, "YYYY-MM-DD")
       const date2w = moment().add(2, 'week')
-      return mDate.isBetween(moment(), date2w, null, '[]') || mDate.isSame(moment())
+      return mDate.isBetween(moment().add(-1, 'day'), date2w, null, '[]') || mDate.isSame(moment())
     },
     add() {
       const isValid = this.$refs.form.validate()
@@ -255,9 +255,13 @@ export default {
         startTime, createdTime, title, description, managerId: id
         , location, endTime
       }
+      if (startTime.valueOf() <= moment().valueOf()) {
+        alert("Please select a correct start date and time")
+        return
+      }
       createShift(createShiftParams).then((res) => {
         if (res.code === 200) {
-          alert("Shift successfully added")
+          alert("The shift has been created.")
         }
         this.dialog = false
         window.location.reload()
