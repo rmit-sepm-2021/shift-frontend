@@ -212,7 +212,7 @@ export default {
       const historyData = []
       this.shiftListData = ShiftListToTableData(data.filter(i => i.statusStr === 'Waiting for approval' || i.statusStr === 'In progress' || i.statusStr === 'Allocated'))
       for (const datum of data) {
-        if (datum.status !== "Allocated" && datum.status !== "In progress") {
+        if (datum.status !== "Allocated" && datum.status !== "In progress"&& datum.status !== "Waiting for approval") {
           historyData.push(datum);
         }
         this.shiftListData2 = ShiftListToTableData(historyData)
@@ -294,6 +294,7 @@ export default {
           console.log(r)
           this.$alert(dialogMessage.alert.success.AcceptAllocation)
           item.status = "Allocated"
+
         }).catch(r => {
           console.log(r)
           this.$alert(dialogMessage.alert.error.Common)
@@ -311,6 +312,7 @@ export default {
             }
         await postMessage(param2).then(r => {
           console.log(r)
+          window.location.reload()
         }).catch(r => {
           console.log(r)
         })
