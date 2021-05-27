@@ -97,7 +97,7 @@
 
           </v-row>
           <v-row>
-            <v-col cols="12"  >
+            <v-col cols="12">
               <v-text-field
                   v-model.trim="selectedEvent.location"
                   label="Location"
@@ -131,6 +131,7 @@
 
 // import {allocateShift, getAvailableStaff} from "@/api/shift";
 import AllocateShiftDialog from "@/components/AllocateShiftDialog/AllocateShiftDialog";
+import {getAvailableStaff} from "@/api/shift";
 
 export default {
   name: "ShiftDetail",
@@ -140,6 +141,15 @@ export default {
     // selectedOpen: Boolean,
     selectedElement: null,
 
+  },
+  mounted() {
+    getAvailableStaff(this.shiftId).then(r => {
+      const data = r.data
+      this.item = data.map(i => ({
+        text: i['name'],
+        value: i['id']
+      }))
+    });
   },
   components: {AllocateShiftDialog},
   data: () => ({
@@ -154,7 +164,11 @@ export default {
 
   methods: {
     openDialog() {
-      this.allocateShiftDialog = true;
+      if (this.item.length === 0) {
+        this.$alert("There is no available staff.")
+      } else {
+        this.allocateShiftDialog = true;
+      }
     }
   }
 
