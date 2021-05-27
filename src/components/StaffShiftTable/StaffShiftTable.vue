@@ -349,6 +349,7 @@ export default {
           }).catch(r => {
             console.log(r)
           })
+          this.$alert("The shift has been rejected.")
           this.dialog = false
         }).catch(r => {
           console.log(r)
@@ -385,6 +386,7 @@ export default {
             console.log(r)
           })
           this.dialog = false
+          this.$alert("The shift has been canceled.")
         }).catch(r => {
           console.log(r)
           this.$alert(dialogMessage.alert.error.Common)
