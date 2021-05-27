@@ -3,15 +3,6 @@
     <v-toolbar class="pa-2">
       <v-row>
         <v-col cols="3">
-          <v-select
-              class="mr-auto"
-              :items="inboxOptions"
-              label="Message Type"
-              outlined
-              v-model="type"
-              @change="changeMessageType"
-              dense
-          ></v-select>
         </v-col>
       </v-row>
     </v-toolbar>
