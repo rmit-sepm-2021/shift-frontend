@@ -4,6 +4,7 @@
 
     </v-sheet>
     <v-sheet>
+      <p>Current Shifts</p>
       <v-data-table
           :headers="headers"
           :items="shiftListData"
@@ -72,7 +73,7 @@
         </template>
       </v-data-table>
     </v-sheet>
-    <p>History</p>
+    <p>History Shifts</p>
     <v-data-table
         :headers="aheader"
         :items="shiftListData2"
