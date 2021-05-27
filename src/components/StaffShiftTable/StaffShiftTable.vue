@@ -259,6 +259,7 @@ export default {
           console.log(r)
         })
         this.dialog = false
+        this.$alert("The shift has been rejected. A notification has been sent to the manager.")
       }).catch(r => {
         console.log(r)
         this.$alert(dialogMessage.alert.error.Common)
