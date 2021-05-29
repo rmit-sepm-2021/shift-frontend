@@ -109,7 +109,7 @@
 </template>
 
 <script>
-import {mapState} from "vuex"
+import {mapMutations, mapState} from "vuex"
 import {getStaffInfo, updateStaffInfo} from "@/api/staff"
 import {getManagerInfo, updateManagerInfo} from "@/api/manager"
 
@@ -165,8 +165,10 @@ export default {
       id: state => state.user.id,
       role: state => state.user.role,
     }),
+
   },
   methods: {
+    ...mapMutations(['SET_NAME', 'SET_EMAIL']),
     validate() {
       return this.$refs.form.validate()
     },
@@ -218,6 +220,8 @@ export default {
       if (this.role.toLowerCase() === "staff") {
         updateStaffInfo(param).then(resp => {
           if (resp) {
+            this.SET_EMAIL(param.email)
+            this.SET_NAME(param.name)
             alert("Profile has been updated.")
             this.initUser();
           }
@@ -225,6 +229,8 @@ export default {
       } else {
         updateManagerInfo(param).then(resp => {
           if (resp) {
+            this.SET_EMAIL(param.email)
+            this.SET_NAME(param.name)
             alert("Profile has been updated.")
             this.initUser();
           }
