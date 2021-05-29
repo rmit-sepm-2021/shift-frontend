@@ -130,15 +130,15 @@ export default {
       }
       const param = {staffId: this.form.id, workingLimit: this.form.workingLimit}
       if (this.form.workingLimit > 120) {
-        this.$alert(dialogMessage.alert.error.LargeWorkingLimit)
+        alert(dialogMessage.alert.error.LargeWorkingLimit)
         return;
       }
       updateWorkingLimit(param).then((resp) => {
         if (resp.code !== 200) {
-          this.$alert(dialogMessage.alert.error.UpdateWorkingLimit)
+          alert(dialogMessage.alert.error.UpdateWorkingLimit)
           return
         }
-        this.$alert(dialogMessage.alert.success.ChangeWorkingLimit)
+        alert(dialogMessage.alert.success.ChangeWorkingLimit)
 
         for (const item of this.accounts) {
           if (item['_id'] === this.form.id && item['role'] === 'Staff') {
@@ -149,7 +149,7 @@ export default {
         this.dialogFormVisible = false
         // window.location.reload()
       }).catch(() => {
-        this.$alert(dialogMessage.alert.error.Common)
+        alert(dialogMessage.alert.error.Common)
       })
 
     }
