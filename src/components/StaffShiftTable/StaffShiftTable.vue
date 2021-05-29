@@ -29,7 +29,7 @@
           <v-dialog
               v-model="dialog"
               width="500"
-              v-if="item.status!=='Rejected'"
+              v-if="item.status==='Waiting for approval'"
           >
 
             <template v-slot:activator="{ on:dialog, attrs }">
