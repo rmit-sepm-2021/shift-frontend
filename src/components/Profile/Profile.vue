@@ -252,6 +252,7 @@ export default {
       const isValid=this.validate()
       if(!isValid){
         this.$alert("The form is not valid.")
+        return;
       }
       const param = {
         id: this.id,
