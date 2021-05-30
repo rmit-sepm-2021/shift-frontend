@@ -9,7 +9,7 @@ let AlertConstructor = Vue.extend(Object.assign({vuetify}, AlertDialog))
 
 export const confirm = function (content) {
     return new Promise((res, rej) => {
-        //promise封装，ok执行resolve，no执行reject
+
         const div = document.createElement('div')
         document.body.appendChild(div)
         let alertDom = new ConfirmConstructor({
